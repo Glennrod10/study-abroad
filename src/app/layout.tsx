@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import Providers from "./providers";
+import { Toaster } from "sonner"
+import TaskReminderListener from "./components/tasks/askReminderListener";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  variable: "--font-inter",
+})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,9 +23,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.className} bg-background text-text-primary`}
       >
-        {children}
+        <Providers>
+          {children}
+        </Providers>
+        <Toaster
+          position="bottom-left"
+          richColors
+          toastOptions={{
+            style: {
+              borderRadius: "12px",
+            },
+          }}
+        />
+        <TaskReminderListener />
       </body>
     </html>
   );

@@ -1,26 +1,119 @@
 @import "tailwindcss";
+@import "react-datepicker/dist/react-datepicker.css";
+
+/* ============================= */
+/* 🎨 STUDY ABROAD CRM TOKENS */
+/* ============================= */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand */
+  --color-primary: #5048E5;
+  --color-primary-light: #F5F4FF;
+
+  /* Semantic */
+  --color-success: #10B981;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
+
+  /* Neutrals */
+  --color-background: #F9FAFB;
+  --color-surface: #FFFFFF;
+  --color-border: #E5E7EB;
+
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-disabled: #9CA3AF;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+
+  /* Sidebar */
+  --color-sidebar-bg: #FFFFFF;
+  --color-sidebar-active: #5048E5;
+  --color-sidebar-hover: #F5F4FF;
+
+  /* Topbar */
+  --color-topbar-bg: #FFFFFF;
+
+  /* Card */
+  --color-card-bg: #FFFFFF;
+
+  /* Icon backgrounds */
+  --color-icon-purple: #EEF2FF;
+  --color-icon-green: #ECFDF5;
+  --color-icon-orange: #FFF7ED;
+
+  /* Shadow */
+  --shadow-card: 0px 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0px 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ============================= */
+/* Base Styles */
+/* ============================= */
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* ============================= */
+/* Visa Board Scrollbar */
+/* ============================= */
+
+.visa-scroll {
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: var(--color-primary) transparent;
+}
+
+.visa-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.visa-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.visa-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-text-primary);
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.visa-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sidebar-active);
+}
+
+.react-datepicker {
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  font-family: inherit;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.react-datepicker__header {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.react-datepicker__day--selected {
+  background: var(--color-primary);
+  border-radius: 6px;
+}
+
+.react-datepicker__day:hover {
+  background: #f3f4f6;
+  border-radius: 6px;
+}
+
+.react-datepicker__time-container {
+  border-left: 1px solid #e5e7eb;
+}
+
+.react-datepicker__time-list-item--selected {
+  background: var(--color-primary) !important;
 }

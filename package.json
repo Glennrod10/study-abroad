@@ -9,18 +9,35 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@next-auth/supabase-adapter": "^0.2.1",
+    "@supabase/supabase-js": "^2.97.0",
+    "bcryptjs": "^3.0.3",
+    "install": "^0.13.0",
+    "lucide-react": "^0.575.0",
     "next": "16.1.6",
+    "next-auth": "^4.24.13",
+    "npm": "^11.10.1",
+    "openai": "^6.27.0",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-datepicker": "^9.1.0",
+    "react-dom": "19.2.3",
+    "recharts": "^3.7.0",
+    "sonner": "^2.0.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.24",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
-    "tailwindcss": "^4",
+    "init": "^0.1.2",
+    "npx": "^10.2.2",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.2.0",
     "typescript": "^5"
   }
 }
