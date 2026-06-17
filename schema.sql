@@ -63,10 +63,17 @@ create table if not exists students (
 
 -- ── Universities ────────────────────────────────────────────────────────────
 create table if not exists universities (
-    id         uuid primary key default gen_random_uuid(),
-    name       text not null,
-    agency_id  uuid references agencies(id) on delete cascade,
-    created_at timestamptz not null default now()
+    id              uuid primary key default gen_random_uuid(),
+    name            text not null,
+    agency_id       uuid references agencies(id) on delete cascade,
+    country         text,
+    city            text,
+    ranking         integer,
+    logo_url        text,
+    banner_url      text,
+    intake_periods  text[],
+    program_levels  text[],
+    created_at      timestamptz not null default now()
 );
 
 -- ── Programs ────────────────────────────────────────────────────────────────
@@ -185,14 +192,19 @@ create table if not exists visa_lor_requests (
 
 -- ── Tasks ───────────────────────────────────────────────────────────────────
 create table if not exists tasks (
-    id         uuid primary key default gen_random_uuid(),
-    agency_id  uuid references agencies(id) on delete cascade,
-    created_by uuid references users(id),
-    title      text,
-    status     text,
-    due_date   timestamptz,
-    assigned_to uuid references users(id),
-    created_at timestamptz not null default now()
+    id            uuid primary key default gen_random_uuid(),
+    agency_id     uuid references agencies(id) on delete cascade,
+    created_by    uuid references users(id),
+    title         text not null,
+    description   text,
+    status        text not null default 'pending',
+    priority      text not null default 'medium',
+    due_date      timestamptz,
+    reminder_at   timestamptz,
+    reminder_sent boolean not null default false,
+    student_id    uuid references students(id),
+    assigned_to   uuid references users(id),
+    created_at    timestamptz not null default now()
 );
 
 -- ── Activities ──────────────────────────────────────────────────────────────

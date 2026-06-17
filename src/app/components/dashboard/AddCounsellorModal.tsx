@@ -3,8 +3,6 @@
 import { useState } from "react"
 import { X, Eye, EyeOff, UserPlus } from "lucide-react"
 import { toast } from "sonner"
-import { useSession } from "next-auth/react"
-import { supabase } from "@/app/lib/supabase"
 
 interface Props {
     open: boolean
@@ -17,8 +15,6 @@ export default function AddCounsellorModal({
     onClose,
     onSuccess,
 }: Props) {
-
-    const { data: session } = useSession()
 
     const [loading, setLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
@@ -62,7 +58,6 @@ export default function AddCounsellorModal({
                 password: form.password,
                 phone: form.phone,
                 title: form.title,
-                agency_id: session?.user?.agency_id,
             }),
         })
 

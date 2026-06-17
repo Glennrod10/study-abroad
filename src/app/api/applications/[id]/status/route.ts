@@ -10,8 +10,9 @@ const supabase = createClient(
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params
 
     const session = await getServerSession(authOptions)
     if (!session) {
@@ -24,7 +25,7 @@ export async function PATCH(
     const { data: application, error } = await supabase
         .from("applications")
         .update({ application_status: status })
-        .eq("id", params.id)
+        .eq("id", id)
         .select()
         .single()
 

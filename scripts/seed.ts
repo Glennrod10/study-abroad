@@ -39,14 +39,13 @@ async function main() {
     console.log("🌱 Seeding StudyAbroad CRM...\n")
 
     /* 1. Agency */
-    const { data: existingAgency } = await supabase
+    let { data: existingAgency } = await supabase
         .from("agencies")
         .select("id, name")
         .eq("email", "admin@globalstudy.com")
         .maybeSingle()
 
-    let agency = existingAgency
-    if (!agency) {
+    if (!existingAgency) {
         const { data: newAgency, error: agencyErr } = await supabase
             .from("agencies")
             .insert({ name: "Global Study Assist", email: "admin@globalstudy.com" })
@@ -54,13 +53,12 @@ async function main() {
             .single()
 
         if (agencyErr) { console.error("❌ agencies:", agencyErr.message); return }
-        agency = newAgency
-        console.log(`✅ Agency: ${agency.name} (${agency.id})`)
-    } else {
-        console.log(`  ↪ Agency exists: ${agency.name}`)
+        existingAgency = newAgency
     }
 
+    const agency = existingAgency!
     const agencyId = agency.id
+    console.log(`✅ Agency: ${agency.name} (${agencyId})`)
 
     /* 2. Users */
     const hash = (pw: string) => bcrypt.hashSync(pw, 10)

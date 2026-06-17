@@ -22,7 +22,7 @@ export default function AssignCounsellorModal({
 
     const { data: session } = useSession()
 
-    const [counsellors, setCounsellors] = useState<any[]>([])
+    const [counsellors, setCounsellors] = useState<{ id: string; name: string }[]>([])
     const [selectedCounsellor, setSelectedCounsellor] = useState("")
     const [loading, setLoading] = useState(false)
 
