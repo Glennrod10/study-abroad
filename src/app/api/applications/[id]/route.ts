@@ -18,7 +18,7 @@ export async function DELETE(
     const id = resolvedParams.id
 
     const session = await getServerSession(authOptions)
-    if (!session) {
+    if (!session?.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -42,8 +42,7 @@ export async function PUT(
     const { id } = await params
 
     const session = await getServerSession(authOptions)
-
-    if (!session) {
+    if (!session?.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
