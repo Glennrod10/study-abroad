@@ -60,7 +60,7 @@ export default function VisaCard({
                 notes,
                 tags: tagsInput
                     .split(",")
-                    .map((t) => t.trim())
+                    .map((t: string) => t.trim())
                     .filter(Boolean),
             }),
         });
