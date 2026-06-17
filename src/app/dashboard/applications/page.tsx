@@ -1,7 +1,6 @@
 import Link from "next/link"
 import { createClient } from "@supabase/supabase-js"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { getAuthSession } from "@/lib/auth"
 import ApplicationsTable from "@/app/components/applications/ApplicationsTable"
 import ApplicationFilters from "@/app/components/applications/ApplicationFilters"
 import SummaryCards from "@/app/components/applications/SummaryCards"
@@ -30,7 +29,7 @@ export default async function ApplicationsPage({
 
     const PAGE_SIZE = 10
 
-    const session = await getServerSession(authOptions)
+    const session = await getAuthSession()
     if (!session) return <div>Unauthorized</div>
 
     let query = supabase

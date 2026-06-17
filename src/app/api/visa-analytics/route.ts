@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { getAuthSession } from "@/lib/auth"
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,7 +9,7 @@ const supabase = createClient(
 
 export async function GET() {
 
-    const session = await getServerSession(authOptions)
+    const session = await getAuthSession()
 
     if (!session) {
         return NextResponse.json(

@@ -33,7 +33,7 @@ export async function GET(
         .single()
 
     const student =
-        visaCase?.applications?.students
+        visaCase?.applications?.[0]?.students?.[0]
 
     const visaInfo = {
         student_name: `${student?.first_name ?? ""} ${student?.last_name ?? ""}`,

@@ -35,7 +35,7 @@ export default function AssignCounsellorModal({
         const { data } = await supabase
             .from("users")
             .select("id,name")
-            .eq("agency_id", session?.user?.agency_id)
+            .eq("agency_id", (session?.user as any)?.agency_id)
             .eq("role", "counsellor")
 
         setCounsellors(data || [])

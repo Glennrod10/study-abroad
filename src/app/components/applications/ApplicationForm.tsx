@@ -50,6 +50,10 @@ export default function ApplicationForm({
         },
     })
 
+    const updateNewStudent = (field: string, value: string) => {
+        setForm(prev => ({ ...prev, new_student: { ...prev.new_student, [field]: value } }))
+    }
+
     // Load students
     useEffect(() => {
         fetch("/api/students-list")

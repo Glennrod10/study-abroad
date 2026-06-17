@@ -177,7 +177,7 @@ export default function LeadCard({
                                     className={`text-[10px] px-2 py-1 rounded-full ${sourceStyles[lead.source] || "bg-gray-100 text-gray-600"
                                         }`}
                                 >
-                                    {lead.source.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase())}
+                                    {lead.source.replace("_", " ").replace(/\b\w/g, (l: string) => l.toUpperCase())}
                                 </span>
                             )}
 

@@ -9,7 +9,7 @@ export default function CounsellorDashboard() {
 
     const { data: session } = useSession()
 
-    const counsellorId = session?.user?.id
+    const counsellorId = (session?.user as any)?.id
 
     const [students, setStudents] = useState<any[]>([])
     const [applications, setApplications] = useState<any[]>([])

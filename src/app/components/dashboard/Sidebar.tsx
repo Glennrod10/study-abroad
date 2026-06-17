@@ -91,7 +91,7 @@ export default function Sidebar() {
     const pathname = usePathname()
     const { data: session } = useSession()
 
-    const role = session?.user?.role
+    const role = (session?.user as any)?.role
 
     const isActive = (href: string) => {
         if (href === "/dashboard") {

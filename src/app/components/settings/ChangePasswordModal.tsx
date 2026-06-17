@@ -64,7 +64,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: Props) {
         const res = await fetch("/api/update-password", {
             method: "POST",
             body: JSON.stringify({
-                userId: session?.user?.id,
+                userId: (session?.user as any)?.id,
                 password: form.password,
             }),
         });

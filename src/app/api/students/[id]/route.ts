@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
-import { getServerSession } from "next-auth"
-import { authOptions } from "../../auth/[...nextauth]/route"
+import { getAuthSession } from "@/lib/auth"
 
 
 const supabase = createClient(
@@ -13,7 +12,7 @@ export async function DELETE(
     req: Request,
     context: { params: Promise<{ id: string }> }
 ) {
-    const session = await getServerSession(authOptions)
+    const session = await getAuthSession()
 
     if (!session) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -39,7 +38,7 @@ export async function PUT(
     req: Request,
     context: { params: Promise<{ id: string }> }
 ) {
-    const session = await getServerSession(authOptions)
+    const session = await getAuthSession()
 
     if (!session) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })

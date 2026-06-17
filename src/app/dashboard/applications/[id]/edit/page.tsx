@@ -1,6 +1,5 @@
 import { createClient } from "@supabase/supabase-js"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { getAuthSession } from "@/lib/auth"
 import { notFound } from "next/navigation"
 import ApplicationForm from "@/app/components/applications/ApplicationForm"
 
@@ -16,7 +15,7 @@ export default async function EditApplicationPage({
 }) {
     const { id } = await params
 
-    const session = await getServerSession(authOptions)
+    const session = await getAuthSession()
     if (!session) return <div>Unauthorized</div>
 
     const { data: application } = await supabase

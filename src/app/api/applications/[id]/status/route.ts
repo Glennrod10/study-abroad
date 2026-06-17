@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { getAuthSession } from "@/lib/auth"
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,7 +13,7 @@ export async function PATCH(
 ) {
     const { id } = await params
 
-    const session = await getServerSession(authOptions)
+    const session = await getAuthSession()
     if (!session) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }

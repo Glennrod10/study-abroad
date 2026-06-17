@@ -1,7 +1,6 @@
 import Link from "next/link"
 import { createClient } from "@supabase/supabase-js"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { getAuthSession } from "@/lib/auth"
 import UniversityCard from "@/app/components/universities/UniversityCard"
 import UniversityFilters from "@/app/components/universities/UniversityFilters"
 
@@ -36,7 +35,7 @@ export default async function UniversitiesPage({
     const from = (page - 1) * PAGE_SIZE
     const to = from + PAGE_SIZE - 1
 
-    const session = await getServerSession(authOptions)
+    const session = await getAuthSession()
     if (!session) return <div>Unauthorized</div>
 
     let query = supabase

@@ -1,7 +1,6 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { getAuthSession } from "@/lib/auth"
 import StudentForm from "@/app/components/students/StudentForm"
 import { createClient } from "@supabase/supabase-js"
-import { getServerSession } from "next-auth"
 
 
 
@@ -15,7 +14,7 @@ export default async function EditStudent({
 }: {
     params: Promise<{ id: string }>
 }) {
-    const session = await getServerSession(authOptions)
+    const session = await getAuthSession()
     if (!session) return <div>Unauthorized</div>
 
     const resolvedParams = await params

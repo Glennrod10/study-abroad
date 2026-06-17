@@ -17,7 +17,7 @@ export default function DashboardPage() {
         )
     }
 
-    const role = session?.user?.role
+    const role = (session?.user as any)?.role
 
     if (role === "superadmin") {
         return <SuperAdminDashboard />

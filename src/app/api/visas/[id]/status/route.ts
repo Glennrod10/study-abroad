@@ -2,8 +2,7 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getAuthSession } from "@/lib/auth";
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,7 +13,7 @@ export async function PATCH(
     req: Request,
     context: { params: Promise<{ id: string }> }
 ) {
-    const session = await getServerSession(authOptions);
+    const session = await getAuthSession();
 
     if (!session) {
         return NextResponse.json(

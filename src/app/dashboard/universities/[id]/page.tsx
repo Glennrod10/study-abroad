@@ -1,6 +1,5 @@
 import { createClient } from "@supabase/supabase-js"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { getAuthSession } from "@/lib/auth"
 import UniversityDetailClient from "@/app/components/universities/UniversityDetailClient"
 
 
@@ -16,7 +15,7 @@ export default async function UniversityDetailPage({
 }) {
     const { id } = await params
 
-    const session = await getServerSession(authOptions)
+    const session = await getAuthSession()
     if (!session) return <div>Unauthorized</div>
 
     // Fetch university

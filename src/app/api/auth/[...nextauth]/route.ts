@@ -13,7 +13,10 @@ export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
-            credentials: {},
+            credentials: {
+                email: { label: "Email", type: "email" },
+                password: { label: "Password", type: "password" }
+            },
             async authorize(credentials) {
                 if (!credentials?.email || !credentials?.password) {
                     return null
@@ -54,9 +57,9 @@ export const authOptions: NextAuthOptions = {
         /* ===== JWT ===== */
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id            // ✅ ADD THIS
-                token.role = user.role
-                token.agency_id = user.agency_id
+                token.id = user.id
+                token.role = (user as any).role
+                token.agency_id = (user as any).agency_id
             }
             return token
         },
@@ -64,9 +67,9 @@ export const authOptions: NextAuthOptions = {
         /* ===== SESSION ===== */
         async session({ session, token }) {
             if (session.user) {
-                session.user.id = token.id as string    // ✅ ADD THIS
-                session.user.role = token.role as string
-                session.user.agency_id = token.agency_id as string
+                (session.user as any).id = token.id
+                ;(session.user as any).role = token.role
+                ;(session.user as any).agency_id = token.agency_id
             }
             return session
         }

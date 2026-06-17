@@ -1,6 +1,5 @@
 import { createClient } from "@supabase/supabase-js"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { getAuthSession } from "@/lib/auth"
 import UploadDocument from "@/app/components/students/UploadDocument"
 import Link from "next/link"
 import { Pencil } from "lucide-react"
@@ -18,7 +17,7 @@ export default async function StudentDetails({
     params: Promise<{ id: string }>
 }) {
 
-    const session = await getServerSession(authOptions)
+    const session = await getAuthSession()
 
     if (!session) return <div>Unauthorized</div>
 
