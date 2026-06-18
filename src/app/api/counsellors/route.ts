@@ -38,6 +38,15 @@ export async function DELETE(req: Request) {
 
     const { id } = await req.json()
 
+    const { error: unlinkError } = await supabase
+        .from("students")
+        .update({ counsellor_id: null })
+        .eq("counsellor_id", id)
+
+    if (unlinkError) {
+        return NextResponse.json({ error: unlinkError.message }, { status: 500 })
+    }
+
     const { error } = await supabase
         .from("users")
         .delete()
