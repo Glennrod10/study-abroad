@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { getAuthSession } from "@/lib/auth"
+import { logAudit } from "@/lib/audit"
 import { createClient } from "@supabase/supabase-js"
 
 const supabase = createClient(
@@ -54,6 +55,14 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
+    await logAudit({
+        agencyId: session.user.agency_id,
+        studentId: (payload.student_id as string) || null,
+        userId: session.user.id,
+        action: "task.created",
+        description: "Created task",
+    })
+
     return NextResponse.json({ success: true })
 }
 
@@ -69,6 +78,16 @@ export async function PATCH(req: Request) {
         Object.entries(updates).map(([k, v]) => [k, v === "" ? null : v])
     )
 
+    const { data: task, error: fetchError } = await supabase
+        .from("tasks")
+        .select("student_id")
+        .eq("id", id)
+        .single()
+
+    if (fetchError) {
+        return NextResponse.json({ error: fetchError.message }, { status: 500 })
+    }
+
     const { error } = await supabase
         .from("tasks")
         .update(payload)
@@ -77,6 +96,14 @@ export async function PATCH(req: Request) {
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    await logAudit({
+        agencyId: session.user.agency_id,
+        studentId: task?.student_id || null,
+        userId: session.user.id,
+        action: "task.updated",
+        description: `Updated task ${id}`,
+    })
 
     return NextResponse.json({ success: true })
 }
@@ -98,6 +125,13 @@ export async function DELETE(req: Request) {
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    await logAudit({
+        agencyId: session.user.agency_id,
+        userId: session.user.id,
+        action: "task.deleted",
+        description: `Deleted ${Array.isArray(ids) ? ids.length : 1} task(s)`,
+    })
 
     return NextResponse.json({ success: true })
 }

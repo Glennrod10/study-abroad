@@ -3,6 +3,7 @@ export const runtime = "nodejs"
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 import { getAuthSession } from "@/lib/auth"
+import { logAudit } from "@/lib/audit"
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -167,6 +168,14 @@ export async function POST(req: Request) {
             { status: 500 }
         )
     }
+
+    await logAudit({
+        agencyId: session.user.agency_id,
+        studentId: application.student_id,
+        userId: session.user.id,
+        action: "application.created",
+        description: `Created application for student ${finalStudentId}`,
+    })
 
     return NextResponse.json({
         success: true,

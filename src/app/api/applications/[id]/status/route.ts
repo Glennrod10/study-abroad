@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 import { getAuthSession } from "@/lib/auth"
+import { logAudit } from "@/lib/audit"
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -43,6 +44,14 @@ export async function PATCH(
         })
 
     }
+
+    await logAudit({
+        agencyId: session.user.agency_id,
+        studentId: application.student_id,
+        userId: session.user.id,
+        action: "application.status_changed",
+        description: `Changed application ${id} status to ${status}`,
+    })
 
     return NextResponse.json({ success: true })
 }

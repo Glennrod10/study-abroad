@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getAuthSession } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -33,6 +34,13 @@ export async function GET() {
             { status: 500 }
         );
     }
+
+    await logAudit({
+        agencyId: session.user.agency_id,
+        userId: session.user.id,
+        action: "lead.created",
+        description: `Created lead from ${(data as any).student_name}`,
+    });
 
     return NextResponse.json(data);
 }

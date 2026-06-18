@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { getAuthSession } from "@/lib/auth"
+import { logAudit } from "@/lib/audit"
 import { createClient } from "@supabase/supabase-js"
 
 const supabase = createClient(
@@ -56,6 +57,13 @@ export async function DELETE(req: Request) {
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    await logAudit({
+        agencyId: session.user.agency_id,
+        userId: session.user.id,
+        action: "counsellor.deleted",
+        description: `Deleted counsellor ${id}`,
+    })
 
     return NextResponse.json({ success: true })
 }
