@@ -37,7 +37,7 @@ export default function VisaCard({
     const [status, setStatus] = useState(visa.status);
     const [notes, setNotes] = useState(visa.notes ?? "");
     const [tagsInput, setTagsInput] = useState(
-        visa.tags?.join(", ") ?? ""
+        Array.isArray(visa.tags) ? visa.tags.join(", ") : ""
     );
 
     const style = {
@@ -233,7 +233,7 @@ export default function VisaCard({
                             onChange={(e) =>
                                 setVisaType(e.target.value)
                             }
-                            className="w-full border p-2 rounded-md mb-2"
+                            className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none mb-2"
                         />
 
                         <select
@@ -241,7 +241,7 @@ export default function VisaCard({
                             onChange={(e) =>
                                 setStatus(e.target.value)
                             }
-                            className="w-full border p-2 rounded-md mb-2"
+                            className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none mb-2"
                         >
                             {VISA_COLUMNS.map((col) => (
                                 <option key={col.id} value={col.id}>
@@ -256,7 +256,8 @@ export default function VisaCard({
                             onChange={(e) =>
                                 setNotes(e.target.value)
                             }
-                            className="w-full border p-2 rounded-md mb-2 text-sm"
+                            className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none mb-2 resize-none"
+                            rows={3}
                         />
 
                         <input
@@ -265,20 +266,20 @@ export default function VisaCard({
                             onChange={(e) =>
                                 setTagsInput(e.target.value)
                             }
-                            className="w-full border p-2 rounded-md mb-3 text-sm"
+                            className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none mb-3"
                         />
 
-                        <div className="flex justify-end gap-3 text-sm">
+                        <div className="flex justify-end gap-2 pt-1">
                             <button
                                 onClick={() => setIsEditing(false)}
-                                className="text-gray-500 cursor-pointer"
+                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition cursor-pointer"
                             >
                                 Cancel
                             </button>
 
                             <button
                                 onClick={handleSave}
-                                className="text-blue-600 font-semibold cursor-pointer"
+                                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition cursor-pointer"
                             >
                                 Save
                             </button>
@@ -287,15 +288,29 @@ export default function VisaCard({
                 )}
             </div>
 
-            {/* ✅ NOTES MODAL */}
+            {/* NOTES MODAL */}
             {showNotes && (
-                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                    <div className="bg-white w-[450px] rounded-xl p-6 shadow-xl space-y-4">
-                        <h2 className="text-lg font-semibold">
-                            Notes – {visa.student_name}
-                        </h2>
+                <div
+                    className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+                    onClick={() => setShowNotes(false)}
+                >
+                    <div
+                        className="bg-white w-[450px] rounded-xl p-6 shadow-xl space-y-4"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-lg font-semibold">
+                                Notes – {visa.student_name}
+                            </h2>
+                            <button
+                                onClick={() => setShowNotes(false)}
+                                className="text-gray-400 hover:text-gray-600 transition cursor-pointer"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
 
-                        {visa.tags?.length > 0 && (
+                        {Array.isArray(visa.tags) && visa.tags.length > 0 && (
                             <div className="flex flex-wrap gap-2">
                                 {visa.tags.map((tag: string) => (
                                     <span
@@ -312,10 +327,10 @@ export default function VisaCard({
                             {visa.notes || "No notes added yet."}
                         </div>
 
-                        <div className="flex justify-end pt-4">
+                        <div className="flex justify-end pt-2">
                             <button
                                 onClick={() => setShowNotes(false)}
-                                className="px-4 py-2 border rounded-md hover:bg-gray-100 transition cursor-pointer"
+                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition cursor-pointer"
                             >
                                 Close
                             </button>

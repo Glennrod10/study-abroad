@@ -23,7 +23,22 @@ export default function VisaAnalyticsTab() {
     }
 
     if (!stats) {
-        return <div className="p-6">Loading analytics...</div>
+        return (
+            <div className="space-y-8 animate-pulse">
+                <div>
+                    <div className="h-8 w-40 bg-gray-200 rounded mb-2" />
+                    <div className="h-4 w-64 bg-gray-200 rounded" />
+                </div>
+                <div className="grid grid-cols-4 gap-6">
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                        <div key={i} className="p-6 rounded-xl border border-gray-200 bg-white shadow-sm">
+                            <div className="h-4 w-24 bg-gray-200 rounded mb-3" />
+                            <div className="h-8 w-12 bg-gray-200 rounded" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        )
     }
 
     const successColor =
