@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { DndContext, closestCorners, DragEndEvent } from "@dnd-kit/core";
 import { VISA_COLUMNS } from "./constants";
 import VisaColumn from "./VisaColumn";
 import CreateVisaModal from "./CreateVisaModal";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function VisaBoard({ onOpenChecklist }: any) {
     const [visas, setVisas] = useState<any[]>([]);
     const [showModal, setShowModal] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const fetchVisas = async () => {
+        setLoading(true);
         const res = await fetch("/api/visas");
         const data = await res.json();
 
@@ -19,6 +22,7 @@ export default function VisaBoard({ onOpenChecklist }: any) {
         } else {
             setVisas([]);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -97,6 +101,39 @@ export default function VisaBoard({ onOpenChecklist }: any) {
                 ? "yellow"
                 : "red";
 
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(false);
+
+    const updateScroll = useCallback(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        setCanScrollLeft(el.scrollLeft > 4);
+        setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+    }, []);
+
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        updateScroll();
+        el.addEventListener("scroll", updateScroll, { passive: true });
+        window.addEventListener("resize", updateScroll);
+        const observer = new ResizeObserver(updateScroll);
+        observer.observe(el);
+        return () => {
+            el.removeEventListener("scroll", updateScroll);
+            window.removeEventListener("resize", updateScroll);
+            observer.disconnect();
+        };
+    }, [updateScroll]);
+
+    const scrollBy = (dir: "left" | "right") => {
+        scrollRef.current?.scrollBy({
+            left: dir === "left" ? -400 : 400,
+            behavior: "smooth",
+        });
+    };
+
     return (
         <div className="space-y-8">
 
@@ -121,48 +158,95 @@ export default function VisaBoard({ onOpenChecklist }: any) {
 
             {/* ===== STAT CARDS ===== */}
             <div className="grid grid-cols-4 gap-6">
-                <StatCard
-                    title="Visa Approved"
-                    value={approvedCount}
-                    color="green"
-                />
-                <StatCard
-                    title="Visa Rejected"
-                    value={rejectedCount}
-                    color="red"
-                />
-                <StatCard
-                    title="Under Processing"
-                    value={processingCount}
-                    color="yellow"
-                />
-                <StatCard
-                    title="Success Rate"
-                    value={`${successRate}%`}
-                    color={successColor}
-                    tooltip={`Success Rate = (Approved ÷ Total) × 100\n${approvedCount} approved out of ${totalVisas} total visas`}
-                />
+                {loading ? (
+                    <>
+                        {[1, 2, 3, 4].map((i) => (
+                            <div key={i} className="p-6 rounded-xl border border-gray-200 bg-white shadow-sm animate-pulse">
+                                <div className="h-4 w-24 bg-gray-200 rounded mb-3" />
+                                <div className="h-8 w-16 bg-gray-200 rounded" />
+                            </div>
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        <StatCard title="Visa Approved" value={approvedCount} color="green" />
+                        <StatCard title="Visa Rejected" value={rejectedCount} color="red" />
+                        <StatCard title="Under Processing" value={processingCount} color="yellow" />
+                        <StatCard
+                            title="Success Rate"
+                            value={`${successRate}%`}
+                            color={successColor}
+                            tooltip={`Success Rate = (Approved ÷ Total) × 100\n${approvedCount} approved out of ${totalVisas} total visas`}
+                        />
+                    </>
+                )}
             </div>
 
             {/* ===== BOARD ===== */}
-            <div className="flex gap-6 overflow-x-auto visa-scroll pb-4">
-                <DndContext
-                    collisionDetection={closestCorners}
-                    onDragEnd={handleDragEnd}
+            <div className="relative">
+                <div
+                    ref={scrollRef}
+                    className="flex gap-6 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden"
+                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                 >
-                    {VISA_COLUMNS.map((column) => (
-                        <VisaColumn
-                            key={column.id}
-                            column={column}
-                            visas={visas.filter(
-                                (v) => v.status === column.id
-                            )}
-                            onUpdated={fetchVisas}
-                            onDeleted={fetchVisas}
-                            onOpenChecklist={onOpenChecklist}
-                        />
-                    ))}
-                </DndContext>
+                    {loading ? (
+                        VISA_COLUMNS.map((column) => (
+                            <div key={column.id} className="w-80 flex-shrink-0 flex flex-col rounded-2xl border border-gray-200 bg-white shadow-sm h-[calc(100vh-16rem)] animate-pulse">
+                                <div className="px-4 py-3 border-b border-gray-200">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-3 h-3 rounded-full bg-gray-200" />
+                                        <div className="h-4 w-24 bg-gray-200 rounded" />
+                                    </div>
+                                </div>
+                                <div className="p-4 space-y-3 flex-1">
+                                    {[1, 2, 3].map((j) => (
+                                        <div key={j} className="bg-white p-4 rounded-xl border border-gray-200">
+                                            <div className="h-3 w-20 bg-gray-200 rounded mb-2" />
+                                            <div className="h-3 w-32 bg-gray-200 rounded mb-3" />
+                                            <div className="h-2 w-full bg-gray-200 rounded" />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+                            {VISA_COLUMNS.map((column) => (
+                                <VisaColumn
+                                    key={column.id}
+                                    column={column}
+                                    visas={visas.filter((v) => v.status === column.id)}
+                                    onUpdated={fetchVisas}
+                                    onDeleted={fetchVisas}
+                                    onOpenChecklist={onOpenChecklist}
+                                />
+                            ))}
+                        </DndContext>
+                    )}
+                </div>
+
+                {canScrollLeft && (
+                    <>
+                        <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-white via-white/80 to-transparent z-10" />
+                        <button
+                            onClick={() => scrollBy("left")}
+                            className="absolute left-1 top-1/2 -translate-y-1/2 z-20 bg-white/90 border border-gray-200 rounded-full p-1.5 shadow-md hover:bg-white transition cursor-pointer"
+                        >
+                            <ChevronLeft size={18} />
+                        </button>
+                    </>
+                )}
+                {canScrollRight && (
+                    <>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white via-white/80 to-transparent z-10" />
+                        <button
+                            onClick={() => scrollBy("right")}
+                            className="absolute right-1 top-1/2 -translate-y-1/2 z-20 bg-white/90 border border-gray-200 rounded-full p-1.5 shadow-md hover:bg-white transition cursor-pointer"
+                        >
+                            <ChevronRight size={18} />
+                        </button>
+                    </>
+                )}
             </div>
 
             {showModal && (

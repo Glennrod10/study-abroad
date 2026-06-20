@@ -3,6 +3,7 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getAuthSession } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -59,6 +60,13 @@ export async function PATCH(
         );
     }
 
+    await logAudit({
+        agencyId: session.user.agency_id,
+        userId: session.user.id,
+        action: "lead.updated",
+        description: `Updated lead ${leadId}`,
+    });
+
     return NextResponse.json({ success: true });
 }
 
@@ -82,6 +90,20 @@ export async function DELETE(
     const resolvedParams = await context.params;
     const leadId = resolvedParams.id;
 
+    const { data: lead, error: fetchError } = await supabase
+        .from("leads")
+        .select("student_name")
+        .eq("id", leadId)
+        .eq("agency_id", session.user.agency_id)
+        .single();
+
+    if (fetchError) {
+        return NextResponse.json(
+            { error: fetchError.message },
+            { status: 500 }
+        );
+    }
+
     const { error } = await supabase
         .from("leads")
         .delete()
@@ -94,6 +116,13 @@ export async function DELETE(
             { status: 500 }
         );
     }
+
+    await logAudit({
+        agencyId: session.user.agency_id,
+        userId: session.user.id,
+        action: "lead.deleted",
+        description: `Deleted lead ${lead?.student_name || leadId}`,
+    });
 
     return NextResponse.json({ success: true });
 }

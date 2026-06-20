@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getAuthSession } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -173,7 +174,7 @@ export async function POST(request: Request) {
         .insert([
             {
                 ...body,
-                agency_id: session.user.agency_id, // ✅ ADD THIS
+                agency_id: session.user.agency_id,
             },
         ])
         .select()
@@ -185,6 +186,24 @@ export async function POST(request: Request) {
             { status: 500 }
         );
     }
+
+    let visaStudentId: string | null = null;
+    if (data?.application_id) {
+        const { data: app } = await supabase
+            .from("applications")
+            .select("student_id")
+            .eq("id", data.application_id)
+            .single();
+        visaStudentId = app?.student_id ?? null;
+    }
+
+    await logAudit({
+        agencyId: session.user.agency_id,
+        studentId: visaStudentId,
+        userId: session.user.id,
+        action: "visa.created",
+        description: `Created visa case for application ${data?.application_id}`,
+    });
 
     return NextResponse.json(data);
 }

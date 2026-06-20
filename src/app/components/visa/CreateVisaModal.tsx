@@ -115,24 +115,24 @@ export default function CreateVisaModal({
 
                     {/* Search */}
                     <div>
-                        <label className="text-sm font-medium">
+                        <label className="text-sm font-medium text-gray-700">
                             Search Student <span className="text-red-500">*</span>
                         </label>
                         <input
                             placeholder="Search student..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full border p-2 rounded-md mt-1"
+                            className="w-full border border-gray-300 rounded-lg p-2.5 mt-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                         />
                         {errors.application && (
-                            <p className="text-red-500 text-xs mt-1">
+                            <p className="text-red-500 text-xs mt-1.5">
                                 {errors.application}
                             </p>
                         )}
                     </div>
 
                     {/* Student List */}
-                    <div className="border rounded-md h-40 overflow-y-auto">
+                    <div className="border border-gray-200 rounded-lg overflow-y-auto max-h-44">
                         {filteredApplications.length === 0 && (
                             <div className="p-3 text-sm text-gray-400">
                                 No students found
@@ -143,12 +143,14 @@ export default function CreateVisaModal({
                             <div
                                 key={app.id}
                                 onClick={() => setSelectedApp(app)}
-                                className={`p-3 cursor-pointer hover:bg-gray-100 ${selectedApp?.id === app.id
-                                    ? "bg-gray-200"
-                                    : ""
+                                className={`px-3 py-2.5 cursor-pointer text-sm transition-colors
+                                    ${selectedApp?.id === app.id
+                                        ? "bg-blue-50 text-blue-700 font-medium"
+                                        : "hover:bg-gray-50 text-gray-700"
                                     }`}
                             >
-                                {app.student_name} — {app.country}
+                                {app.student_name}
+                                <span className="text-gray-400 ml-1">— {app.country}</span>
                             </div>
                         ))}
                     </div>
@@ -157,41 +159,41 @@ export default function CreateVisaModal({
                     {selectedApp && (
                         <>
                             <div>
-                                <label className="text-sm font-medium">
+                                <label className="text-sm font-medium text-gray-700">
                                     Destination Country
                                 </label>
                                 <input
                                     value={selectedApp?.country ?? ""}
                                     disabled
-                                    className="w-full border p-2 rounded-md bg-gray-100 mt-1"
+                                    className="w-full border border-gray-200 rounded-lg p-2.5 mt-1.5 text-sm bg-gray-50 text-gray-500"
                                 />
                             </div>
 
                             <div>
-                                <label className="text-sm font-medium">
+                                <label className="text-sm font-medium text-gray-700">
                                     Visa Type <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     placeholder="Student / Dependent"
-                                    className="w-full border p-2 rounded-md mt-1"
+                                    className="w-full border border-gray-300 rounded-lg p-2.5 mt-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                                     value={visaType}
                                     onChange={(e) => setVisaType(e.target.value)}
                                 />
                                 {errors.visaType && (
-                                    <p className="text-red-500 text-xs mt-1">
+                                    <p className="text-red-500 text-xs mt-1.5">
                                         {errors.visaType}
                                     </p>
                                 )}
                             </div>
 
                             <div>
-                                <label className="text-sm font-medium">
+                                <label className="text-sm font-medium text-gray-700">
                                     Visa Status
                                 </label>
                                 <select
                                     value={status}
                                     onChange={(e) => setStatus(e.target.value)}
-                                    className="w-full border p-2 rounded-md mt-1"
+                                    className="w-full border border-gray-300 rounded-lg p-2.5 mt-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                                 >
                                     {VISA_COLUMNS.map((col) => (
                                         <option key={col.id} value={col.id}>
@@ -208,14 +210,14 @@ export default function CreateVisaModal({
                 <div className="p-6 border-t flex justify-end gap-3">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 border rounded-md hover:bg-gray-100 transition cursor-pointer"
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition cursor-pointer"
                     >
                         Cancel
                     </button>
 
                     <button
                         onClick={handleSubmit}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition cursor-pointer"
+                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition cursor-pointer"
                     >
                         Create
                     </button>

@@ -144,15 +144,17 @@ export default function VisaSopTab({ visaId }: any) {
 
     if (!visaId) {
         return (
-            <div className="bg-white border rounded-xl p-6">
-                Select visa case first
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8 flex flex-col items-center justify-center text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-300 mb-3"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>
+                <p className="text-gray-500 font-medium">Select a visa case first</p>
+                <p className="text-sm text-gray-400 mt-1">Pick a visa from the Board to build its SOP.</p>
             </div>
         )
     }
 
 
     return (
-        <div className="bg-white border rounded-xl shadow-sm p-6 space-y-6">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 space-y-6">
 
             <h2 className="text-xl font-semibold">
                 SOP Builder
@@ -166,35 +168,40 @@ export default function VisaSopTab({ visaId }: any) {
                     placeholder="Student background"
                     value={background}
                     onChange={(e) => setBackground(e.target.value)}
-                    className="border rounded-md p-3"
+                    className="border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none resize-none"
+                    rows={4}
                 />
 
                 <textarea
                     placeholder="Why this course?"
                     value={courseReason}
                     onChange={(e) => setCourseReason(e.target.value)}
-                    className="border rounded-md p-3"
+                    className="border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none resize-none"
+                    rows={4}
                 />
 
                 <textarea
                     placeholder="Why this country?"
                     value={countryReason}
                     onChange={(e) => setCountryReason(e.target.value)}
-                    className="border rounded-md p-3"
+                    className="border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none resize-none"
+                    rows={4}
                 />
 
                 <textarea
                     placeholder="Career goals"
                     value={careerGoals}
                     onChange={(e) => setCareerGoals(e.target.value)}
-                    className="border rounded-md p-3"
+                    className="border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none resize-none"
+                    rows={4}
                 />
 
                 <textarea
                     placeholder="Financial support"
                     value={financial}
                     onChange={(e) => setFinancial(e.target.value)}
-                    className="border rounded-md p-3"
+                    className="border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none resize-none"
+                    rows={4}
                 />
 
             </div>
@@ -204,14 +211,14 @@ export default function VisaSopTab({ visaId }: any) {
                 <button
                     onClick={generateSop}
                     disabled={loading}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-md cursor-pointer disabled:opacity-50"
+                    className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer"
                 >
                     {loading ? "Generating..." : "Generate SOP"}
                 </button>
 
                 <button
                     onClick={saveSop}
-                    className="bg-green-600 text-white px-4 py-2 rounded-md cursor-pointer"
+                    className="bg-green-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-green-700 transition cursor-pointer"
                 >
                     Save Version
                 </button>
@@ -225,7 +232,7 @@ export default function VisaSopTab({ visaId }: any) {
                 <textarea
                     value={generated}
                     onChange={(e) => setGenerated(e.target.value)}
-                    className="w-full h-64 border rounded-md p-4"
+                    className="w-full h-64 border border-gray-300 rounded-lg p-4 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                 />
 
             )}
@@ -234,20 +241,24 @@ export default function VisaSopTab({ visaId }: any) {
 
             <div className="space-y-2">
 
-                <h3 className="font-semibold">
+                <h3 className="font-semibold text-gray-800">
                     Previous Versions
                 </h3>
 
-                {drafts.map((draft) => (
+                {drafts.length === 0 ? (
+                    <p className="text-sm text-gray-400">No saved versions yet.</p>
+                ) : (
+                    drafts.map((draft) => (
 
-                    <div
-                        key={draft.id}
-                        className="border p-3 rounded-lg text-sm"
-                    >
-                        Version {draft.version}
-                    </div>
+                        <div
+                            key={draft.id}
+                            className="border border-gray-200 p-3 rounded-lg text-sm text-gray-700"
+                        >
+                            Version {draft.version}
+                        </div>
 
-                ))}
+                    ))
+                )}
 
             </div>
 

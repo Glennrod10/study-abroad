@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getAuthSession } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,6 +12,15 @@ export async function POST(
     req: Request,
     context: { params: Promise<{ id: string }> }
 ) {
+
+    const session = await getAuthSession();
+
+    if (!session) {
+        return NextResponse.json(
+            { error: "Unauthorized" },
+            { status: 401 }
+        );
+    }
 
     const { id } = await context.params;
 
@@ -85,6 +96,14 @@ export async function POST(
                 stage: "application_started"
             })
             .eq("id", id);
+
+        await logAudit({
+            agencyId: lead.agency_id,
+            studentId: student.id,
+            userId: session.user.id,
+            action: "lead.converted",
+            description: `Converted lead ${lead.student_name} to student`,
+        });
 
         return NextResponse.json({
             success: true,

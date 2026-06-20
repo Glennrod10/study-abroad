@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 import { getAuthSession } from "@/lib/auth"
+import { logAudit } from "@/lib/audit"
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -63,12 +64,12 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    await supabase.from("activities").insert({
-        agency_id: session.user.agency_id,
-        student_id: student.id,
-        user_id: session.user.id,
-        action: "Student Created",
-        description: `${student.first_name} ${student.last_name} profile created`,
+    await logAudit({
+        agencyId: session.user.agency_id,
+        studentId: student.id,
+        userId: session.user.id,
+        action: "student.created",
+        description: `Created student ${student.first_name} ${student.last_name}`,
     })
 
     return NextResponse.json({ success: true })
