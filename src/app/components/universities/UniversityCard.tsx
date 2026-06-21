@@ -14,7 +14,7 @@ export default function UniversityCard({ university }: any) {
     }
 
     return (
-        <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition group">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition group">
 
             {/* 🔹 Banner Section */}
             <div className="relative h-40 bg-gray-100">
@@ -49,7 +49,7 @@ export default function UniversityCard({ university }: any) {
                         <img
                             src={university.logo_url}
                             alt="logo"
-                            className="w-12 h-12 rounded-xl object-contain bg-white p-2 border border-border"
+                            className="w-12 h-12 rounded-xl object-contain bg-white p-2 border border-gray-200"
                         />
                     ) : (
                         <div className="w-12 h-12 rounded-xl bg-[var(--color-primary)] text-white flex items-center justify-center font-bold text-lg shadow-sm">

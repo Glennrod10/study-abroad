@@ -217,7 +217,7 @@ export default function TasksPage() {
                 ) : tasks.length === 0 ? (
                     <EmptyState onCreateTask={() => setOpen(true)} />
                 ) : (
-                    <div className="bg-white border border-border rounded-xl shadow-sm overflow-hidden">
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
                         <table className="w-full">
                             <thead className="bg-gray-50 border-b">
                                 <tr className="text-xs uppercase text-gray-500">
@@ -411,7 +411,7 @@ function StatusBadge({ status }: { status: TaskStatus }) {
 
 function LoadingSkeleton() {
     return (
-        <div className="bg-white border border-border rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
             <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                     <tr className="text-xs uppercase text-gray-500">
@@ -460,7 +460,7 @@ function LoadingSkeleton() {
 
 function EmptyState({ onCreateTask }: { onCreateTask: () => void }) {
     return (
-        <div className="bg-white border border-border rounded-xl p-16 text-center shadow-sm">
+        <div className="bg-white border border-gray-200 rounded-xl p-16 text-center shadow-sm">
             <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
                     <ClipboardList size={32} className="text-gray-400" />

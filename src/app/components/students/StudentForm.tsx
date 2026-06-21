@@ -170,7 +170,7 @@ export default function StudentForm({ initialData = {}, mode }: Props) {
 
             </div>
 
-            <div className="bg-white border border-border rounded-xl shadow-sm p-8">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8">
 
                 <form
                     onSubmit={handleSubmit}
@@ -199,7 +199,7 @@ export default function StudentForm({ initialData = {}, mode }: Props) {
 
                         </div>
 
-                        <label className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl px-6 py-4 cursor-pointer hover:border-[var(--color-primary)] transition">
+                        <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-xl px-6 py-4 cursor-pointer hover:border-[var(--color-primary)] transition">
 
                             <UploadCloud size={20} className="text-text-secondary mb-1" />
 
@@ -254,7 +254,7 @@ export default function StudentForm({ initialData = {}, mode }: Props) {
                             name="counsellor_id"
                             value={form.counsellor_id || ""}
                             onChange={handleChange}
-                            className="h-11 px-4 border border-border rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition"
+                            className="h-11 px-4 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition"
                         >
 
                             <option value="">
@@ -341,7 +341,7 @@ function Input({ name, label, value, onChange, type = "text", error }: any) {
                 className={`h-11 px-4 border rounded-lg text-sm transition
                 ${error
                         ? "border-red-400 focus:ring-red-200 focus:border-red-500"
-                        : "border-border focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)]"
+                        : "border-gray-200 focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)]"
                     }`}
             />
 
@@ -369,7 +369,7 @@ function Select({ name, label, value, onChange, options }: any) {
                 name={name}
                 value={value || ""}
                 onChange={onChange}
-                className="h-11 px-4 border border-border rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition"
+                className="h-11 px-4 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition"
             >
 
                 {options.map((opt: string) => (

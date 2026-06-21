@@ -121,7 +121,7 @@ export default function NewUniversityPage() {
 
             <form
                 onSubmit={handleSubmit}
-                className="w-full bg-white p-10 rounded-2xl border border-border shadow-sm space-y-8"
+                className="w-full bg-white p-10 rounded-2xl border border-gray-200 shadow-sm space-y-8"
             >
 
                 {/* BASIC INFO */}
@@ -187,7 +187,7 @@ export default function NewUniversityPage() {
                             name="default_commission_type"
                             value={form.default_commission_type}
                             onChange={handleChange}
-                            className="h-12 px-4 border border-border rounded-xl"
+                            className="h-12 px-4 border border-gray-200 rounded-xl"
                         >
                             <option value="percentage">Percentage</option>
                             <option value="fixed">Fixed</option>
@@ -232,7 +232,7 @@ function Input({ label, ...props }: any) {
             <label className="text-sm font-medium">{label}</label>
             <input
                 {...props}
-                className="h-12 px-4 border border-border rounded-xl focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)]"
+                className="h-12 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)]"
             />
         </div>
     )
@@ -243,7 +243,7 @@ function Textarea(props: any) {
         <textarea
             {...props}
             rows={4}
-            className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)]"
+            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)]"
         />
     )
 }
@@ -263,7 +263,7 @@ function SingleImageUpload({ label, file, setFile }: any) {
             />
 
             {file && (
-                <div className="flex items-center justify-between bg-gray-50 border border-border rounded-lg px-3 py-2">
+                <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
                     <div className="flex items-center gap-3">
                         <img
                             src={URL.createObjectURL(file)}
@@ -308,7 +308,7 @@ function MultiImageUpload({ label, files, setFiles }: any) {
                 {files.map((file: File, index: number) => (
                     <div
                         key={index}
-                        className="flex items-center justify-between bg-gray-50 border border-border rounded-lg px-3 py-2"
+                        className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-2"
                     >
                         <div className="flex items-center gap-3">
                             <img

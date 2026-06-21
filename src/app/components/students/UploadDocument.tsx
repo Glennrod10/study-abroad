@@ -46,21 +46,21 @@ export default function UploadDocument({ studentId }: { studentId: string }) {
     }
 
     return (
-        <div className="w-full bg-gray-50 border border-border rounded-xl p-4 space-y-4">
+        <div className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-4">
 
             {/* Document Type Dropdown */}
             <div className="relative w-48">
                 <button
                     type="button"
                     onClick={() => setOpen(!open)}
-                    className="w-full flex items-center justify-between px-3 py-2 bg-white border border-border rounded-lg text-sm font-medium hover:border-[var(--color-primary)] transition"
+                    className="w-full flex items-center justify-between px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium hover:border-[var(--color-primary)] transition"
                 >
                     {type}
                     <ChevronDown size={16} className="text-text-secondary" />
                 </button>
 
                 {open && (
-                    <div className="absolute mt-2 w-full bg-white border border-border rounded-lg shadow-lg z-50">
+                    <div className="absolute mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                         {documentTypes.map((doc) => (
                             <button
                                 key={doc}
@@ -79,7 +79,7 @@ export default function UploadDocument({ studentId }: { studentId: string }) {
             </div>
 
             {/* File Upload Box */}
-            <label className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-6 cursor-pointer hover:border-[var(--color-primary)] transition">
+            <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-xl p-6 cursor-pointer hover:border-[var(--color-primary)] transition">
                 <UploadCloud size={32} className="text-text-secondary mb-2" />
 
                 <span className="text-sm font-medium">

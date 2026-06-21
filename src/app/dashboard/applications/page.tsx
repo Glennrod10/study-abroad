@@ -118,7 +118,7 @@ export default async function ApplicationsPage({
                         href={`?page=${i + 1}`}
                         className={`px-3 py-1 rounded-md text-sm ${page === i + 1
                             ? "bg-[var(--color-primary)] text-white"
-                            : "border border-border"
+                            : "border border-gray-200"
                             }`}
                     >
                         {i + 1}

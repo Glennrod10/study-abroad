@@ -60,21 +60,21 @@ export default function UniversityFilters() {
     }
 
     return (
-        <div className="bg-white border border-border rounded-xl p-5 flex flex-wrap gap-6 items-center shadow-sm">
+        <div className="bg-white border border-gray-200 rounded-xl p-5 flex flex-wrap gap-6 items-center shadow-sm">
 
             {/* Search */}
             <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Search university..."
-                className="h-10 px-4 border border-border rounded-lg text-sm min-w-[200px]"
+                className="h-10 px-4 border border-gray-200 rounded-lg text-sm min-w-[200px]"
             />
 
             {/* Country */}
             <select
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="h-10 px-4 border border-border rounded-lg text-sm"
+                className="h-10 px-4 border border-gray-200 rounded-lg text-sm"
             >
                 <option value="">All Countries</option>
                 {COUNTRIES.map((c) => (
@@ -88,7 +88,7 @@ export default function UniversityFilters() {
             <select
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
-                className="h-10 px-4 border border-border rounded-lg text-sm"
+                className="h-10 px-4 border border-gray-200 rounded-lg text-sm"
             >
                 <option value="">All Intake Years</option>
                 {YEARS.map((y) => (

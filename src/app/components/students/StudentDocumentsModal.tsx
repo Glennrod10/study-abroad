@@ -44,7 +44,7 @@ export default function StudentDocumentsModal({
             <div className="bg-white w-full max-w-2xl rounded-xl shadow-xl">
 
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
 
                     <h3 className="text-lg font-bold">
                         Student Documents
@@ -72,7 +72,7 @@ export default function StudentDocumentsModal({
 
                         <div
                             key={doc.id}
-                            className="flex items-center justify-between border border-border rounded-lg px-4 py-3 hover:bg-gray-50 transition"
+                            className="flex items-center justify-between border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50 transition"
                         >
 
                             {/* Left Side */}

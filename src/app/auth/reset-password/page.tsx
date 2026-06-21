@@ -62,7 +62,7 @@ function ResetPasswordForm() {
 
     if (!token) {
         return (
-            <div className="bg-white rounded-2xl shadow-sm border border-border p-8 text-center">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center">
                 <h1 className="text-xl font-semibold mb-2">Invalid link</h1>
                 <p className="text-gray-600 text-sm mb-6">This reset link is missing or invalid.</p>
                 <Link href="/auth/forgot-password" className="text-blue-600 hover:underline text-sm">
@@ -74,7 +74,7 @@ function ResetPasswordForm() {
 
     if (done) {
         return (
-            <div className="bg-white rounded-2xl shadow-sm border border-border p-8 text-center">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <CheckCircle className="w-8 h-8 text-green-600" />
                 </div>
@@ -88,7 +88,7 @@ function ResetPasswordForm() {
     }
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-border p-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <h1 className="text-xl font-semibold mb-2">Set new password</h1>
             <p className="text-gray-600 text-sm mb-6">Enter your new password below.</p>
 
@@ -104,7 +104,7 @@ function ResetPasswordForm() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Min. 6 characters"
-                            className="w-full h-11 pl-10 pr-4 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full h-11 pl-10 pr-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
                 </div>
@@ -117,7 +117,7 @@ function ResetPasswordForm() {
                         value={confirm}
                         onChange={(e) => setConfirm(e.target.value)}
                         placeholder="Repeat password"
-                        className="w-full h-11 px-4 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full h-11 px-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 

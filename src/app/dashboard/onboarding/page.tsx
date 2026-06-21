@@ -26,7 +26,7 @@ export default function OnboardingPage() {
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
             {/* Progress bar */}
-            <div className="bg-white border-b border-border">
+            <div className="bg-white border-b border-gray-200">
                 <div className="max-w-2xl mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
                         {STEPS.map((s, i) => (
@@ -59,7 +59,7 @@ export default function OnboardingPage() {
             <div className="flex-1 flex items-center justify-center px-4 py-12">
                 <div className="w-full max-w-lg">
                     {step === "welcome" && (
-                        <div className="bg-white rounded-2xl shadow-sm border border-border p-8 text-center">
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center">
                             <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <Building2 className="w-10 h-10 text-blue-600" />
                             </div>
@@ -78,7 +78,7 @@ export default function OnboardingPage() {
                     )}
 
                     {step === "agency" && (
-                        <div className="bg-white rounded-2xl shadow-sm border border-border p-8">
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
                             <h2 className="text-xl font-semibold mb-2">Your agency profile</h2>
                             <p className="text-gray-600 text-sm mb-6">
                                 Your agency is already set up. You can update details anytime from Settings.
@@ -107,7 +107,7 @@ export default function OnboardingPage() {
                     )}
 
                     {step === "counsellors" && (
-                        <div className="bg-white rounded-2xl shadow-sm border border-border p-8">
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
                             <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Users className="w-8 h-8 text-purple-600" />
                             </div>
@@ -124,7 +124,7 @@ export default function OnboardingPage() {
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => setStep("students")}
-                                    className="flex-1 py-3 border border-border rounded-lg text-gray-700 hover:bg-gray-50"
+                                    className="flex-1 py-3 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50"
                                 >
                                     Skip for now
                                 </button>
@@ -141,7 +141,7 @@ export default function OnboardingPage() {
                     )}
 
                     {step === "students" && (
-                        <div className="bg-white rounded-2xl shadow-sm border border-border p-8">
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
                             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <GraduationCap className="w-8 h-8 text-green-600" />
                             </div>
@@ -158,7 +158,7 @@ export default function OnboardingPage() {
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => setStep("done")}
-                                    className="flex-1 py-3 border border-border rounded-lg text-gray-700 hover:bg-gray-50"
+                                    className="flex-1 py-3 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50"
                                 >
                                     Skip for now
                                 </button>
@@ -175,7 +175,7 @@ export default function OnboardingPage() {
                     )}
 
                     {step === "done" && (
-                        <div className="bg-white rounded-2xl shadow-sm border border-border p-8 text-center">
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center">
                             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <CheckCircle className="w-10 h-10 text-green-600" />
                             </div>

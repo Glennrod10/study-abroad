@@ -50,7 +50,7 @@ export default function StudentsTable({ students }: { students: any[] }) {
 
     if (!students || students.length === 0) {
         return (
-            <div className="bg-white border border-border rounded-xl p-12 text-center shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-xl p-12 text-center shadow-sm">
                 <p className="text-text-secondary text-sm">
                     No students match your filters.
                 </p>
@@ -157,11 +157,11 @@ export default function StudentsTable({ students }: { students: any[] }) {
 
             {/* TABLE */}
 
-            <div className="bg-white border border-border rounded-xl overflow-hidden shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
 
                 <table className="w-full text-left">
 
-                    <thead className="bg-gray-50 border-b border-border">
+                    <thead className="bg-gray-50 border-b border-gray-200">
 
                         <tr>
 
@@ -237,7 +237,7 @@ export default function StudentsTable({ students }: { students: any[] }) {
                     <button
                         disabled={page === 1}
                         onClick={() => setPage(page - 1)}
-                        className="h-9 w-9 flex items-center justify-center rounded-lg border border-border hover:bg-gray-50 disabled:opacity-40"
+                        className="h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40"
                     >
                         <ChevronLeft size={16} />
                     </button>
@@ -248,7 +248,7 @@ export default function StudentsTable({ students }: { students: any[] }) {
                         <>
                             <button
                                 onClick={() => setPage(1)}
-                                className="h-9 w-9 rounded-lg border border-border hover:bg-gray-50"
+                                className="h-9 w-9 rounded-lg border border-gray-200 hover:bg-gray-50"
                             >
                                 1
                             </button>
@@ -270,7 +270,7 @@ export default function StudentsTable({ students }: { students: any[] }) {
                             h-9 w-9 rounded-lg text-sm font-medium
                             ${page === p
                                     ? "bg-[var(--color-primary)] text-white"
-                                    : "border border-border hover:bg-gray-50"}
+                                    : "border border-gray-200 hover:bg-gray-50"}
                             `}
                         >
                             {p}
@@ -288,7 +288,7 @@ export default function StudentsTable({ students }: { students: any[] }) {
 
                             <button
                                 onClick={() => setPage(totalPages)}
-                                className="h-9 w-9 rounded-lg border border-border hover:bg-gray-50"
+                                className="h-9 w-9 rounded-lg border border-gray-200 hover:bg-gray-50"
                             >
                                 {totalPages}
                             </button>
@@ -300,7 +300,7 @@ export default function StudentsTable({ students }: { students: any[] }) {
                     <button
                         disabled={page === totalPages}
                         onClick={() => setPage(page + 1)}
-                        className="h-9 w-9 flex items-center justify-center rounded-lg border border-border hover:bg-gray-50 disabled:opacity-40"
+                        className="h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40"
                     >
                         <ChevronRight size={16} />
                     </button>

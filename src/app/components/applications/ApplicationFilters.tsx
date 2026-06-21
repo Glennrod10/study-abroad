@@ -25,26 +25,26 @@ export default function ApplicationFilters() {
     }, [q, intake, status])
 
     return (
-        <div className="bg-white border border-border rounded-xl p-4 flex gap-3 items-center">
+        <div className="bg-white border border-gray-200 rounded-xl p-4 flex gap-3 items-center">
 
             <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Search student or university"
-                className="h-9 px-3 border border-border rounded-md text-sm"
+                className="h-9 px-3 border border-gray-200 rounded-md text-sm"
             />
 
             <input
                 value={intake}
                 onChange={(e) => setIntake(e.target.value)}
                 placeholder="Intake"
-                className="h-9 px-3 border border-border rounded-md text-sm"
+                className="h-9 px-3 border border-gray-200 rounded-md text-sm"
             />
 
             <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="h-9 px-3 border border-border rounded-md text-sm"
+                className="h-9 px-3 border border-gray-200 rounded-md text-sm"
             >
                 <option value="">All Status</option>
                 <option>Draft</option>

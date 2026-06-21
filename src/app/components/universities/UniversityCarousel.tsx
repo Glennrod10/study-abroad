@@ -9,7 +9,7 @@ export default function UniversityCarousel({ images }: any) {
     if (!images.length) return null
 
     return (
-        <div className="relative w-full h-72 rounded-xl overflow-hidden shadow-sm border border-border">
+        <div className="relative w-full h-72 rounded-xl overflow-hidden shadow-sm border border-gray-200">
 
             <img
                 src={images[index]}

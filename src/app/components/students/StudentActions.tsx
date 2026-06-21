@@ -125,7 +125,7 @@ export default function StudentActions({ studentId }: { studentId: string }) {
                 </button>
 
                 {open && (
-                    <div className="absolute right-0 mt-2 w-44 bg-white border border-border rounded-lg shadow-lg z-50 overflow-hidden">
+                    <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
 
                         <button
                             onClick={() => router.push(`/dashboard/students/${studentId}`)}
@@ -188,7 +188,7 @@ export default function StudentActions({ studentId }: { studentId: string }) {
                         <select
                             value={selectedCounsellor}
                             onChange={(e) => setSelectedCounsellor(e.target.value)}
-                            className="w-full h-11 px-4 border border-border rounded-lg mb-6"
+                            className="w-full h-11 px-4 border border-gray-200 rounded-lg mb-6"
                         >
 
                             <option value="">
@@ -207,7 +207,7 @@ export default function StudentActions({ studentId }: { studentId: string }) {
 
                             <button
                                 onClick={() => setShowAssignModal(false)}
-                                className="px-4 py-2 border border-border rounded-lg text-sm"
+                                className="px-4 py-2 border border-gray-200 rounded-lg text-sm"
                             >
                                 Cancel
                             </button>
