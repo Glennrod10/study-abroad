@@ -1,15 +1,14 @@
 "use client"
 
-
 import StudentActions from "@/app/components/students/StudentActions"
-import { Eye, Edit, MoreVertical } from "lucide-react"
+import type { StudentRecord } from "./page"
 
 export default function StudentRow({
     student,
     selected,
     toggleSelect
 }: {
-    student: any
+    student: StudentRecord
     selected: boolean
     toggleSelect: (id: string) => void
 }) {
@@ -41,12 +40,11 @@ export default function StudentRow({
             <td className="px-6 py-4">
                 <div className="flex items-center gap-3">
 
-                    {/* Avatar */}
-                    <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 border">
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 border shrink-0">
                         {student.avatar_url ? (
                             <img
                                 src={student.avatar_url}
-                                alt="Avatar"
+                                alt={`${student.first_name} ${student.last_name}`}
                                 className="w-full h-full object-cover"
                             />
                         ) : (
@@ -56,9 +54,8 @@ export default function StudentRow({
                         )}
                     </div>
 
-                    {/* Name + Code */}
-                    <div>
-                        <p className="font-semibold">
+                    <div className="min-w-0">
+                        <p className="font-semibold truncate">
                             {student.first_name} {student.last_name}
                         </p>
                         <p className="text-xs text-text-secondary">
@@ -69,26 +66,15 @@ export default function StudentRow({
                 </div>
             </td>
 
-            <td className="px-6 py-4 text-sm">
+            <td className="px-6 py-4 text-sm max-w-[200px] truncate">
                 {student.email}
             </td>
             <td className="px-6 py-4 text-sm">
                 {student.counsellor?.name || "Unassigned"}
             </td>
 
-            {/* <td>
-                <div>
-                    <p>{student.last_activity_note || "No activity"}</p>
-                    <p className="text-xs text-text-secondary">
-                        {student.last_activity_at
-                            ? new Date(student.last_activity_at).toLocaleDateString()
-                            : ""}
-                    </p>
-                </div>
-            </td> */}
-
             <td className="px-6 py-4">
-                <span className={`px-2 py-1 text-xs rounded-full font-medium ${getStatusStyle(student.status)}`}>
+                <span className={`px-2.5 py-1 text-xs rounded-full font-medium ${getStatusStyle(student.status)}`}>
                     {student.status}
                 </span>
             </td>
