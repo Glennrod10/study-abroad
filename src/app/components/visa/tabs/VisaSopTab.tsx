@@ -3,9 +3,17 @@
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
-export default function VisaSopTab({ visaId }: any) {
+interface SopDraft {
+    id: number
+    visa_case_id: string
+    content: string
+    version: number
+    created_at: string
+}
 
-    const [drafts, setDrafts] = useState<any[]>([])
+export default function VisaSopTab({ visaId }: { visaId: string | null }) {
+
+    const [drafts, setDrafts] = useState<SopDraft[]>([])
     const [background, setBackground] = useState("")
     const [courseReason, setCourseReason] = useState("")
     const [countryReason, setCountryReason] = useState("")
@@ -248,7 +256,7 @@ export default function VisaSopTab({ visaId }: any) {
                 {drafts.length === 0 ? (
                     <p className="text-sm text-gray-400">No saved versions yet.</p>
                 ) : (
-                    drafts.map((draft) => (
+                    drafts.map((draft: SopDraft) => (
 
                         <div
                             key={draft.id}

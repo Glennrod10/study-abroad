@@ -10,38 +10,57 @@ export async function POST(req: Request) {
 
     const formData = await req.formData()
 
-    const file = formData.get("file") as File
+    const files = formData.getAll("files") as File[]
     const visaId = formData.get("visaId") as string
-    const checklistItemId = formData.get("checklistItemId") as string
+    const tagsRaw = formData.get("tags") as string
+    const tags: string[] = tagsRaw ? JSON.parse(tagsRaw) : []
 
-    const filePath = `${visaId}/${Date.now()}-${file.name}`
-
-    const { error: uploadError } = await supabase.storage
-        .from("visa-documents")
-        .upload(filePath, file)
-
-    if (uploadError) {
-        return NextResponse.json({ error: uploadError.message }, { status: 500 })
+    if (files.length === 0) {
+        return NextResponse.json({ error: "No files provided" }, { status: 400 })
     }
 
-    const { data } = supabase.storage
-        .from("visa-documents")
-        .getPublicUrl(filePath)
+    const results = []
+    let hasError = false
 
-    const { error } = await supabase
-        .from("visa_documents")
-        .insert([
-            {
-                visa_case_id: visaId,
-                checklist_item_id: checklistItemId,
-                file_name: file.name,
-                file_url: data.publicUrl
-            }
-        ])
+    for (const file of files) {
+        const filePath = `${visaId}/${Date.now()}-${file.name}`
 
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 })
+        const { error: uploadError } = await supabase.storage
+            .from("visa-documents")
+            .upload(filePath, file)
+
+        if (uploadError) {
+            results.push({ file: file.name, error: uploadError.message })
+            hasError = true
+            continue
+        }
+
+        const { data } = supabase.storage
+            .from("visa-documents")
+            .getPublicUrl(filePath)
+
+        const insertPayload: Record<string, any> = {
+            visa_case_id: visaId,
+            file_name: file.name,
+            file_url: data.publicUrl,
+        }
+        if (tags.length > 0) insertPayload.tags = tags
+
+        const { error } = await supabase
+            .from("visa_documents")
+            .insert([insertPayload])
+
+        if (error) {
+            results.push({ file: file.name, error: error.message })
+            hasError = true
+        } else {
+            results.push({ file: file.name, success: true })
+        }
     }
 
-    return NextResponse.json({ success: true })
+    if (hasError) {
+        return NextResponse.json({ results }, { status: 500 })
+    }
+
+    return NextResponse.json({ results })
 }
