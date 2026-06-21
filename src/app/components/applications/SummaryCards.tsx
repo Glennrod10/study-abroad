@@ -128,7 +128,7 @@ function AnalyticsCard({ title, value, growth, icon, color }: any) {
     const theme = colorMap[color]
 
     return (
-        <div className={`${theme.bg} rounded-xl p-6 border border-border relative overflow-hidden`}>
+        <div className={`${theme.bg} rounded-xl p-6 border border-gray-200 relative overflow-hidden`}>
 
             <div className="flex justify-between items-start">
 

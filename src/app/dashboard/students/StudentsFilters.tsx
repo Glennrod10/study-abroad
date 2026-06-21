@@ -101,7 +101,7 @@ export default function StudentsFilters() {
                     h-11
                     rounded-lg
                     bg-gray-50
-                    border border-border
+                    border border-gray-200
                     text-sm
                     transition
                     focus:outline-none
@@ -150,7 +150,7 @@ export default function StudentsFilters() {
                     h-11 px-4
                     rounded-xl
                     bg-gray-50
-                    border border-border
+                    border border-gray-200
                     text-sm font-medium
                     hover:bg-gray-100
                     transition
@@ -174,7 +174,7 @@ export default function StudentsFilters() {
                         bg-white
                         rounded-xl
                         shadow-lg
-                        border border-border
+                        border border-gray-200
                         overflow-hidden
                         z-50
                         "

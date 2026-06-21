@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
 
     if (sent) {
         return (
-            <div className="bg-white rounded-2xl shadow-sm border border-border p-8 text-center">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <CheckCircle className="w-8 h-8 text-green-600" />
                 </div>
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
     }
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-border p-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <Link href="/login" className="text-gray-500 hover:text-gray-700 inline-flex items-center gap-1 text-sm mb-6">
                 <ArrowLeft className="w-4 h-4" /> Back to login
             </Link>
@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="you@example.com"
-                            className="w-full h-11 pl-10 pr-4 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full h-11 pl-10 pr-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
                 </div>

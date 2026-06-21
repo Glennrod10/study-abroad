@@ -48,7 +48,7 @@ export default function ApplicationStatus({
             value={status}
             disabled={loading}
             onChange={(e) => updateStatus(e.target.value)}
-            className="mt-2 px-3 py-1 text-xs rounded-full border border-border bg-white"
+            className="mt-2 px-3 py-1 text-xs rounded-full border border-gray-200 bg-white"
         >
             {STATUS_OPTIONS.map((s) => (
                 <option key={s}>{s}</option>

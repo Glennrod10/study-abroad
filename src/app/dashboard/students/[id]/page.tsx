@@ -77,7 +77,7 @@ export default async function StudentDetails({
             <div className="space-y-8">
 
                 {/* Profile Header */}
-                <div className="bg-white p-6 rounded-xl border border-border flex items-center justify-between">
+                <div className="bg-white p-6 rounded-xl border border-gray-200 flex items-center justify-between">
 
                     <div className="flex items-center gap-4">
 
@@ -119,7 +119,7 @@ export default async function StudentDetails({
                     <div className="lg:col-span-2 space-y-6">
 
                         {/* Personal Details */}
-                        <div className="bg-white p-6 rounded-xl border border-border">
+                        <div className="bg-white p-6 rounded-xl border border-gray-200">
 
                             <h3 className="font-bold mb-4">
                                 Personal Details
@@ -139,7 +139,7 @@ export default async function StudentDetails({
                         </div>
 
                         {/* Documents */}
-                        <div className="bg-white p-6 rounded-xl border border-border">
+                        <div className="bg-white p-6 rounded-xl border border-gray-200">
 
                             <div className="flex items-center justify-between mb-3">
 

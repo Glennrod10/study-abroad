@@ -212,13 +212,13 @@ export default function ApplicationForm({
             <form onSubmit={handleSubmit} className="space-y-8">
 
                 {/* PROGRAM SECTION */}
-                {/* <div className="bg-white p-6 rounded-xl border border-border space-y-4">
+                {/* <div className="bg-white p-6 rounded-xl border border-gray-200 space-y-4">
                     <h2 className="font-bold">Program Selection</h2>
 
                     <select
                         value={form.program_id}
                         onChange={(e) => handleProgramChange(e.target.value)}
-                        className="h-11 px-4 border border-border rounded-lg w-full"
+                        className="h-11 px-4 border border-gray-200 rounded-lg w-full"
                     >
                         <option value="">Select Program</option>
                         {programs.map((p) => (
@@ -230,7 +230,7 @@ export default function ApplicationForm({
                 </div> */}
 
                 {/* STUDENT SECTION */}
-                <div className="bg-white p-6 rounded-xl border border-border space-y-4">
+                <div className="bg-white p-6 rounded-xl border border-gray-200 space-y-4">
                     <h2 className="font-bold">Student</h2>
 
                     <div className="flex gap-6">
@@ -256,7 +256,7 @@ export default function ApplicationForm({
                             name="student_id"
                             value={form.student_id}
                             onChange={handleChange}
-                            className="h-11 px-4 border border-border rounded-lg w-full"
+                            className="h-11 px-4 border border-gray-200 rounded-lg w-full"
                         >
                             <option value="">Select Student</option>
                             {students.map((s) => (
@@ -270,25 +270,25 @@ export default function ApplicationForm({
                             <input placeholder="First Name"
                                 value={form.new_student.first_name}
                                 onChange={(e) => updateNewStudent("first_name", e.target.value)}
-                                className="h-11 px-4 border border-border rounded-lg" />
+                                className="h-11 px-4 border border-gray-200 rounded-lg" />
                             <input placeholder="Last Name"
                                 value={form.new_student.last_name}
                                 onChange={(e) => updateNewStudent("last_name", e.target.value)}
-                                className="h-11 px-4 border border-border rounded-lg" />
+                                className="h-11 px-4 border border-gray-200 rounded-lg" />
                             <input placeholder="Email"
                                 value={form.new_student.email}
                                 onChange={(e) => updateNewStudent("email", e.target.value)}
-                                className="h-11 px-4 border border-border rounded-lg" />
+                                className="h-11 px-4 border border-gray-200 rounded-lg" />
                             <input placeholder="Phone"
                                 value={form.new_student.phone}
                                 onChange={(e) => updateNewStudent("phone", e.target.value)}
-                                className="h-11 px-4 border border-border rounded-lg" />
+                                className="h-11 px-4 border border-gray-200 rounded-lg" />
                         </div>
                     )}
                 </div>
 
                 {/* APPLICATION DETAILS */}
-                <div className="bg-white p-6 rounded-xl border border-border grid grid-cols-2 gap-4">
+                <div className="bg-white p-6 rounded-xl border border-gray-200 grid grid-cols-2 gap-4">
                     <input
                         name="university_name"
                         value={form.university_name}
@@ -298,32 +298,32 @@ export default function ApplicationForm({
                         className={`h-11 px-4 rounded-lg border 
                             ${universityParam
                                 ? "bg-gray-100 border-gray-200 text-gray-500 cursor-not-allowed"
-                                : "border-border"
+                                : "border-gray-200"
                             }`}
                     />
 
                     <input name="course_name" value={form.course_name}
                         onChange={handleChange}
                         placeholder="Course"
-                        className="h-11 px-4 border border-border rounded-lg" />
+                        className="h-11 px-4 border border-gray-200 rounded-lg" />
 
                     <input name="intake" value={form.intake}
                         onChange={handleChange}
                         placeholder="Intake"
-                        className="h-11 px-4 border border-border rounded-lg" />
+                        className="h-11 px-4 border border-gray-200 rounded-lg" />
 
                     <input name="tuition_fee" value={form.tuition_fee}
                         onChange={handleChange}
                         placeholder="Tuition Fee"
-                        className="h-11 px-4 border border-border rounded-lg" />
+                        className="h-11 px-4 border border-gray-200 rounded-lg" />
                 </div>
 
                 {/* COMMISSION */}
-                <div className="bg-white p-6 rounded-xl border border-border grid grid-cols-2 gap-4">
+                <div className="bg-white p-6 rounded-xl border border-gray-200 grid grid-cols-2 gap-4">
                     <select name="commission_type"
                         value={form.commission_type}
                         onChange={handleChange}
-                        className="h-11 px-4 border border-border rounded-lg">
+                        className="h-11 px-4 border border-gray-200 rounded-lg">
                         <option value="percentage">Percentage</option>
                         <option value="fixed">Fixed</option>
                     </select>
@@ -332,7 +332,7 @@ export default function ApplicationForm({
                         value={form.commission_value}
                         onChange={handleChange}
                         placeholder="Commission"
-                        className="h-11 px-4 border border-border rounded-lg" />
+                        className="h-11 px-4 border border-gray-200 rounded-lg" />
 
                     <div className="col-span-2 text-sm text-text-secondary">
                         Estimated Commission: ₹ {calculatePreview()}

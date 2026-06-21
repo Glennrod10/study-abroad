@@ -6,9 +6,9 @@ export default function ApplicationsTable({ applications }: any) {
     const router = useRouter()
 
     return (
-        <div className="bg-white border border-border rounded-xl shadow-sm overflow-x-auto">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-x-auto">
             <table className="w-full text-left border-collapse">
-                <thead className="bg-gray-50 border-b border-border">
+                <thead className="bg-gray-50 border-b border-gray-200">
                     <tr>
                         <th className="px-6 py-4 text-xs font-bold uppercase">Student</th>
                         <th className="px-6 py-4 text-xs font-bold uppercase">University</th>

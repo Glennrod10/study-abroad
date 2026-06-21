@@ -13,7 +13,7 @@ export default function UniversityDetailClient({
         <div className="space-y-8">
 
             {/* HERO SECTION */}
-            <div className="relative bg-white border border-border rounded-2xl overflow-hidden shadow-sm">
+            <div className="relative bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
 
                 <div className="h-56 bg-gray-200">
                     {university.banner_url ? (
@@ -76,9 +76,9 @@ export default function UniversityDetailClient({
             </div>
 
             {/* TABS */}
-            <div className="bg-white border border-border rounded-xl p-6">
+            <div className="bg-white border border-gray-200 rounded-xl p-6">
 
-                <div className="flex gap-6 border-b border-border pb-3 mb-6">
+                <div className="flex gap-6 border-b border-gray-200 pb-3 mb-6">
                     {["overview", "programs", "campus", "contact"].map((tab) => (
                         <button
                             key={tab}
@@ -105,7 +105,7 @@ export default function UniversityDetailClient({
                         {programs.map((program: any) => (
                             <div
                                 key={program.id}
-                                className="border border-border rounded-xl p-4 space-y-2 hover:shadow-sm transition"
+                                className="border border-gray-200 rounded-xl p-4 space-y-2 hover:shadow-sm transition"
                             >
                                 <h3 className="font-semibold">
                                     {program.name}
@@ -151,7 +151,7 @@ export default function UniversityDetailClient({
 
 function StatCard({ label, value }: any) {
     return (
-        <div className="bg-white border border-border rounded-xl p-6 shadow-sm">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <p className="text-sm text-text-secondary">{label}</p>
             <p className="text-2xl font-bold mt-1">{value}</p>
         </div>

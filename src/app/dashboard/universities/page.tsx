@@ -111,7 +111,7 @@ export default async function UniversitiesPage({
                         {page > 1 && (
                             <Link
                                 href={`?page=${page - 1}`}
-                                className="px-3 py-1 border border-border rounded-md text-sm"
+                                className="px-3 py-1 border border-gray-200 rounded-md text-sm"
                             >
                                 Previous
                             </Link>
@@ -125,7 +125,7 @@ export default async function UniversitiesPage({
                                     href={`?page=${pageNumber}`}
                                     className={`px-3 py-1 rounded-md text-sm ${page === pageNumber
                                         ? "bg-[var(--color-primary)] text-white"
-                                        : "border border-border"
+                                        : "border border-gray-200"
                                         }`}
                                 >
                                     {pageNumber}
@@ -136,7 +136,7 @@ export default async function UniversitiesPage({
                         {page < totalPages && (
                             <Link
                                 href={`?page=${page + 1}`}
-                                className="px-3 py-1 border border-border rounded-md text-sm"
+                                className="px-3 py-1 border border-gray-200 rounded-md text-sm"
                             >
                                 Next
                             </Link>
@@ -145,7 +145,7 @@ export default async function UniversitiesPage({
                     </div>
                 </>
             ) : (
-                <div className="bg-white border border-border rounded-xl p-10 text-center shadow-sm">
+                <div className="bg-white border border-gray-200 rounded-xl p-10 text-center shadow-sm">
                     <p className="text-text-secondary">
                         No universities match your filters.
                     </p>

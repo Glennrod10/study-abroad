@@ -20,7 +20,7 @@ export default function Loading() {
 
             {/* Table */}
 
-            <div className="bg-white border border-border rounded-xl overflow-hidden">
+            <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
 
                 <div className="divide-y">
 

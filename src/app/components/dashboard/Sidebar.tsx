@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useSession } from "next-auth/react"
@@ -13,6 +14,8 @@ import {
     UserSquare2,
     ListTodo,
     PieChart,
+    PanelLeftClose,
+    PanelLeftOpen,
     LucideIcon
 } from "lucide-react"
 
@@ -87,6 +90,16 @@ const navItems: NavItem[] = [
 ]
 
 export default function Sidebar() {
+    const [collapsed, setCollapsed] = useState(false)
+
+    useEffect(() => {
+        const saved = localStorage.getItem("sidebar-collapsed")
+        if (saved === "true") setCollapsed(true)
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem("sidebar-collapsed", String(collapsed))
+    }, [collapsed])
 
     const pathname = usePathname()
     const { data: session } = useSession()
@@ -107,15 +120,28 @@ export default function Sidebar() {
 
     return (
         <aside
-            className="w-[280px] border-r border-border flex flex-col justify-between"
+            className={`${collapsed ? "w-[72px]" : "w-[280px]"} border-r border-gray-200 flex flex-col justify-between transition-all duration-300`}
             style={{ backgroundColor: "var(--color-sidebar-bg)" }}
         >
             <div>
-                <div className="p-6 text-xl font-semibold">
-                    StudyAbroad CRM
+                <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} p-4 gap-2`}>
+                    <div className="text-xl font-semibold">
+                        {collapsed ? (
+                            <span className="text-indigo-600 font-bold text-2xl">S</span>
+                        ) : (
+                            "StudyAbroad"
+                        )}
+                    </div>
+                    <button
+                        onClick={() => setCollapsed((c) => !c)}
+                        title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                        className="h-8 w-8 flex items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition cursor-pointer shrink-0"
+                    >
+                        {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+                    </button>
                 </div>
 
-                <nav className="space-y-2 px-4">
+                <nav className="space-y-2 px-3">
                     {filteredNavItems.map((item) => {
 
                         const active = isActive(item.href)
@@ -125,27 +151,31 @@ export default function Sidebar() {
                             <Link
                                 key={item.name}
                                 href={item.href}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-[15px] font-medium transition-all
+                                title={collapsed ? item.name : undefined}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-[15px] font-medium transition-all whitespace-nowrap
                                 ${active
                                         ? "bg-indigo-50 text-indigo-700 border-r-[4px] border-indigo-600"
                                         : "text-gray-500 hover:bg-gray-50 hover:text-gray-900 border-r-[4px] border-transparent"
-                                    }`}
+                                    }
+                                ${collapsed ? "justify-center px-0" : ""}`}
                             >
-                                <Icon size={20} className={active ? "text-indigo-600" : "text-gray-500"} />
-                                <span>{item.name}</span>
+                                <Icon size={20} className={`shrink-0 ${active ? "text-indigo-600" : "text-gray-500"}`} />
+                                {!collapsed && <span>{item.name}</span>}
                             </Link>
                         )
                     })}
                 </nav>
             </div>
 
-            <div className="p-4">
-                <button
-                    className="w-full h-11 rounded-sm text-white cursor-pointer"
-                    style={{ backgroundColor: "var(--color-primary)" }}
-                >
-                    + New Application
-                </button>
+            <div className="p-3">
+                {!collapsed && (
+                    <button
+                        className="w-full h-11 rounded-sm text-white cursor-pointer text-sm"
+                        style={{ backgroundColor: "var(--color-primary)" }}
+                    >
+                        + New Application
+                    </button>
+                )}
             </div>
         </aside>
     )

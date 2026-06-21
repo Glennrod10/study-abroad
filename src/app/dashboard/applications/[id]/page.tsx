@@ -61,7 +61,7 @@ export default async function ApplicationDetailPage({
 
 
             {/* Student */}
-            <div className="bg-white p-6 rounded-xl border border-border">
+            <div className="bg-white p-6 rounded-xl border border-gray-200">
 
                 <h2 className="font-bold mb-4">
                     Student
@@ -86,7 +86,7 @@ export default async function ApplicationDetailPage({
 
 
             {/* Application Details */}
-            <div className="bg-white p-6 rounded-xl border border-border">
+            <div className="bg-white p-6 rounded-xl border border-gray-200">
 
                 <h2 className="font-bold mb-4">
                     Application Details

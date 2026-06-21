@@ -11,7 +11,7 @@ export default function ProfileSkeleton() {
 
             {/* Avatar Card */}
 
-            <div className="bg-white border border-border rounded-xl p-6 flex items-center gap-6">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 flex items-center gap-6">
 
                 <div className="w-20 h-20 rounded-full bg-gray-200"></div>
 
@@ -31,7 +31,7 @@ export default function ProfileSkeleton() {
 
             {/* Form Card */}
 
-            <div className="bg-white border border-border rounded-xl p-8 space-y-6">
+            <div className="bg-white border border-gray-200 rounded-xl p-8 space-y-6">
 
                 <div className="h-6 w-48 bg-gray-200 rounded"></div>
 

@@ -1,290 +1,367 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useSession } from "next-auth/react"
 import { supabase } from "@/app/lib/supabase"
-import { Users, FileText, Clock, Bell } from "lucide-react"
+import {
+    Users,
+    FileText,
+    Clock,
+    Bell,
+    AlertCircle,
+    RefreshCw,
+    Calendar,
+    CheckCircle2,
+    ListTodo,
+} from "lucide-react"
+import Link from "next/link"
+
+interface DashboardTask {
+    id: string
+    title: string
+    priority: string
+    status: string
+    due_date: string | null
+    reminder_at: string | null
+}
+
+interface DashboardData {
+    studentsCount: number
+    applicationsCount: number
+    visaPending: number
+    tasks: DashboardTask[]
+    pendingTasks: number
+    overdueTasks: number
+    upcomingDeadlines: DashboardTask[]
+}
 
 export default function CounsellorDashboard() {
 
     const { data: session } = useSession()
-
     const counsellorId = (session?.user as any)?.id
 
-    const [students, setStudents] = useState<any[]>([])
-    const [applications, setApplications] = useState<any[]>([])
-    const [visaPending, setVisaPending] = useState(0)
+    const [data, setData] = useState<DashboardData | null>(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState("")
 
-    const [tasks, setTasks] = useState<any[]>([])
-    const [pendingTasks, setPendingTasks] = useState(0)
-    const [overdueTasks, setOverdueTasks] = useState(0)
-
-    useEffect(() => {
-
+    const fetchData = useCallback(async () => {
         if (!counsellorId) return
+        setLoading(true)
+        setError("")
 
-        fetchStudents()
-        fetchApplications()
-        fetchVisaStats()
-        fetchTasks()
+        try {
+            const [
+                { data: students },
+                { data: applications },
+                { data: visaStudents },
+                { data: tasksData },
+            ] = await Promise.all([
+                supabase.from("students").select("id").eq("counsellor_id", counsellorId),
+                supabase.from("applications").select("id").eq("counsellor_id", counsellorId),
+                supabase.from("students").select("id").eq("counsellor_id", counsellorId).eq("status", "Visa Pending"),
+                supabase.from("tasks").select("*").eq("assigned_to", counsellorId).order("priority", { ascending: false }),
+            ])
 
+            const tasks = (tasksData as DashboardTask[]) || []
+            const now = new Date()
+
+            const pendingTasks = tasks.filter((t) => t.status === "pending").length
+
+            const overdueTasks = tasks.filter(
+                (t) => t.status !== "completed" && t.due_date && new Date(t.due_date) < now
+            ).length
+
+            const upcomingDeadlines = tasks
+                .filter((t) => t.status !== "completed" && t.due_date)
+                .sort((a, b) => new Date(a.due_date!).getTime() - new Date(b.due_date!).getTime())
+                .slice(0, 5)
+
+            setData({
+                studentsCount: students?.length || 0,
+                applicationsCount: applications?.length || 0,
+                visaPending: visaStudents?.length || 0,
+                tasks,
+                pendingTasks,
+                overdueTasks,
+                upcomingDeadlines,
+            })
+        } catch {
+            setError("Failed to load dashboard")
+        } finally {
+            setLoading(false)
+        }
     }, [counsellorId])
 
-    const fetchStudents = async () => {
+    useEffect(() => {
+        fetchData()
+    }, [fetchData])
 
-        const { data } = await supabase
-            .from("students")
-            .select("*")
-            .eq("counsellor_id", counsellorId)
-
-        setStudents(data || [])
-    }
-
-    const fetchApplications = async () => {
-
-        const { data } = await supabase
-            .from("applications")
-            .select("*")
-            .eq("counsellor_id", counsellorId)
-
-        setApplications(data || [])
-    }
-
-    const fetchVisaStats = async () => {
-
-        const { data } = await supabase
-            .from("students")
-            .select("id")
-            .eq("counsellor_id", counsellorId)
-            .eq("status", "Visa Pending")
-
-        setVisaPending(data?.length || 0)
-    }
-
-    const fetchTasks = async () => {
-
-        const { data } = await supabase
-            .from("tasks")
-            .select("*")
-            .eq("assigned_to", counsellorId)
-            .order("priority", { ascending: false })
-
-        setTasks(data || [])
-
-        const pending = data?.filter(
-            (t: any) => t.status === "pending"
-        ).length
-
-        const overdue = data?.filter(
-            (t: any) =>
-                t.status !== "completed" &&
-                t.due_date &&
-                new Date(t.due_date) < new Date()
-        ).length
-
-        setPendingTasks(pending || 0)
-        setOverdueTasks(overdue || 0)
-    }
+    if (loading) return <CounsellorSkeleton />
+    if (error) return <ErrorState message={error} onRetry={fetchData} />
 
     return (
         <div className="space-y-8">
 
-            {/* Header */}
-
-            <div>
-                <h1 className="text-3xl font-black">
-                    My Dashboard
-                </h1>
-
-                <p className="text-text-secondary mt-1">
-                    Overview of your students, applications and tasks
-                </p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-3xl font-black">My Dashboard</h1>
+                    <p className="text-text-secondary mt-1">Your students, applications and tasks</p>
+                </div>
+                <button
+                    onClick={fetchData}
+                    className="flex items-center gap-2 text-sm text-text-secondary hover:text-gray-900 transition cursor-pointer"
+                >
+                    <RefreshCw size={14} />
+                    Refresh
+                </button>
             </div>
 
             {/* Stats */}
-
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
-
-                <StatCard
-                    title="My Students"
-                    value={students.length}
-                    icon={<Users size={20} />}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <MiniStatCard
+                    title="Students"
+                    value={data!.studentsCount}
+                    icon={<Users size={18} />}
+                    color="emerald"
                 />
-
-                <StatCard
+                <MiniStatCard
                     title="Applications"
-                    value={applications.length}
-                    icon={<FileText size={20} />}
+                    value={data!.applicationsCount}
+                    icon={<FileText size={18} />}
+                    color="blue"
                 />
-
-                <StatCard
+                <MiniStatCard
                     title="Visa Pending"
-                    value={visaPending}
-                    icon={<Clock size={20} />}
+                    value={data!.visaPending}
+                    icon={<Clock size={18} />}
+                    color="amber"
                 />
-
-                <StatCard
-                    title="My Tasks"
-                    value={tasks.length}
-                    icon={<Clock size={20} />}
+                <MiniStatCard
+                    title="Total Tasks"
+                    value={data!.tasks.length}
+                    icon={<ListTodo size={18} />}
+                    color="purple"
                 />
-
-                <StatCard
-                    title="Pending Tasks"
-                    value={pendingTasks}
-                    icon={<Clock size={20} />}
+                <MiniStatCard
+                    title="Pending"
+                    value={data!.pendingTasks}
+                    icon={<Bell size={18} />}
+                    color="rose"
                 />
-
-                <StatCard
-                    title="Overdue Tasks"
-                    value={overdueTasks}
-                    icon={<Clock size={20} />}
+                <MiniStatCard
+                    title="Overdue"
+                    value={data!.overdueTasks}
+                    icon={<AlertCircle size={18} />}
+                    color="red"
                 />
-
             </div>
 
-            {/* Tasks Table */}
+            {/* Quick Actions */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <QuickAction href="/dashboard/students/new" label="Add Student" />
+                <QuickAction href="/dashboard/applications/new" label="New Application" />
+                <QuickAction href="/dashboard/tasks" label="View Tasks" />
+                <QuickAction href="/dashboard/visa" label="Visa Tracking" />
+            </div>
 
-            <div className="bg-white border border-border rounded-xl shadow-sm overflow-hidden">
+            {/* Two-column layout */}
+            <div className="grid md:grid-cols-2 gap-6">
 
-                <div className="px-6 py-4 border-b border-border">
+                {/* Upcoming Deadlines */}
+                <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
+                    <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                        <h3 className="font-bold text-lg flex items-center gap-2">
+                            <Calendar size={16} className="text-blue-500" />
+                            Upcoming Deadlines
+                        </h3>
+                    </div>
 
-                    <h3 className="font-bold text-lg">
-                        My Tasks
-                    </h3>
-
+                    {data!.upcomingDeadlines.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-10 text-center">
+                            <CheckCircle2 size={36} className="text-green-300 mb-2" />
+                            <p className="text-sm text-text-secondary">No upcoming deadlines</p>
+                        </div>
+                    ) : (
+                        <div className="divide-y divide-border">
+                            {data!.upcomingDeadlines.map((task) => {
+                                const daysLeft = Math.ceil(
+                                    (new Date(task.due_date!).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+                                )
+                                return (
+                                    <div key={task.id} className="px-6 py-3 flex items-center justify-between">
+                                        <div className="min-w-0">
+                                            <p className="font-semibold text-sm truncate">{task.title}</p>
+                                            <p className="text-xs text-text-secondary mt-0.5">{task.priority}</p>
+                                        </div>
+                                        <span
+                                            className={`text-xs font-medium shrink-0 ${
+                                                daysLeft <= 2 ? "text-red-500" : "text-text-secondary"
+                                            }`}
+                                        >
+                                            {daysLeft <= 0 ? "Overdue" : `${daysLeft}d left`}
+                                        </span>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )}
                 </div>
 
-                <table className="w-full text-left">
+                {/* Recent Tasks */}
+                <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
+                    <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                        <h3 className="font-bold text-lg flex items-center gap-2">
+                            <ListTodo size={16} className="text-purple-500" />
+                            My Tasks
+                        </h3>
+                        <Link
+                            href="/dashboard/tasks"
+                            className="text-xs text-indigo-600 hover:underline"
+                        >
+                            View all
+                        </Link>
+                    </div>
 
-                    <thead className="bg-gray-50 border-b border-border">
+                    {data!.tasks.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-10 text-center">
+                            <ListTodo size={36} className="text-gray-300 mb-2" />
+                            <p className="text-sm text-text-secondary">No tasks assigned yet</p>
+                        </div>
+                    ) : (
+                        <div className="divide-y divide-border">
+                            {data!.tasks.slice(0, 5).map((task) => {
+                                const isOverdue =
+                                    task.status !== "completed" &&
+                                    task.due_date &&
+                                    new Date(task.due_date) < new Date()
 
-                        <tr>
-
-                            <th className="px-6 py-3 text-xs font-bold uppercase">
-                                Task
-                            </th>
-
-                            <th className="px-6 py-3 text-xs font-bold uppercase">
-                                Priority
-                            </th>
-
-                            <th className="px-6 py-3 text-xs font-bold uppercase">
-                                Due Date
-                            </th>
-
-                            <th className="px-6 py-3 text-xs font-bold uppercase">
-                                Status
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        {tasks.length === 0 && (
-
-                            <tr>
-
-                                <td
-                                    colSpan={4}
-                                    className="text-center py-10 text-text-secondary"
-                                >
-                                    No tasks assigned yet
-                                </td>
-
-                            </tr>
-
-                        )}
-
-                        {tasks.map((task) => {
-
-                            const isOverdue =
-                                task.status !== "completed" &&
-                                task.due_date &&
-                                new Date(task.due_date) < new Date()
-
-                            return (
-
-                                <tr
-                                    key={task.id}
-                                    className={`border-t hover:bg-gray-50
-                                    ${isOverdue ? "bg-red-50" : ""}`}
-                                >
-
-                                    <td className="px-6 py-4 font-semibold flex items-center gap-2">
-
-                                        {task.reminder_at && (
-                                            <Bell
-                                                size={14}
-                                                className="text-yellow-500"
-                                            />
-                                        )}
-
-                                        {task.title}
-
-                                    </td>
-
-                                    <td className="px-6 py-4 text-sm">
-                                        {task.priority}
-                                    </td>
-
-                                    <td className="px-6 py-4 text-sm text-text-secondary">
-
-                                        {task.due_date
-                                            ? new Date(task.due_date).toLocaleDateString()
-                                            : "-"}
-
-                                    </td>
-
-                                    <td className="px-6 py-4 text-sm">
-
-                                        <span className="px-2 py-1 rounded-full bg-gray-100 text-xs">
-                                            {task.status}
-                                        </span>
-
-                                    </td>
-
-                                </tr>
-
-                            )
-
-                        })}
-
-                    </tbody>
-
-                </table>
+                                return (
+                                    <div
+                                        key={task.id}
+                                        className={`px-6 py-3 flex items-center justify-between ${isOverdue ? "bg-red-50" : ""}`}
+                                    >
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            {task.reminder_at && (
+                                                <Bell size={14} className="text-yellow-500 shrink-0" />
+                                            )}
+                                            <span className="font-semibold text-sm truncate">{task.title}</span>
+                                        </div>
+                                        <div className="flex items-center gap-3 shrink-0">
+                                            <span className="text-xs text-text-secondary">
+                                                {task.due_date
+                                                    ? new Date(task.due_date).toLocaleDateString()
+                                                    : "-"}
+                                            </span>
+                                            <StatusBadge status={task.status} />
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )}
+                </div>
 
             </div>
-
         </div>
     )
 }
 
-function StatCard({ title, value, icon }: any) {
+function MiniStatCard({
+    title,
+    value,
+    icon,
+    color,
+}: {
+    title: string
+    value: number
+    icon: React.ReactNode
+    color: "emerald" | "blue" | "amber" | "purple" | "rose" | "red"
+}) {
+
+    const gradients: Record<string, string> = {
+        emerald: "from-emerald-500 to-emerald-600",
+        blue: "from-blue-500 to-blue-600",
+        amber: "from-amber-500 to-amber-600",
+        purple: "from-purple-500 to-purple-600",
+        rose: "from-rose-500 to-rose-600",
+        red: "from-red-500 to-red-600",
+    }
 
     return (
-
-        <div className="bg-white p-6 rounded-xl border border-border shadow-sm flex items-center gap-4">
-
-            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                {icon}
+        <div
+            className={`relative overflow-hidden rounded-xl p-4 text-white shadow bg-gradient-to-r ${gradients[color]} hover:scale-[1.02] transition`}
+        >
+            <div className="absolute -right-4 -top-4 opacity-20">
+                <div className="w-16 h-16 bg-white rounded-full blur-2xl" />
             </div>
-
-            <div>
-
-                <p className="text-xs uppercase font-bold text-text-secondary">
-                    {title}
-                </p>
-
-                <h4 className="text-2xl font-black">
-                    {value}
-                </h4>
-
+            <div className="flex items-center justify-between relative z-10">
+                <div>
+                    <p className="text-[10px] uppercase font-semibold opacity-90">{title}</p>
+                    <p className="text-2xl font-black mt-0.5">{value}</p>
+                </div>
+                <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">{icon}</div>
             </div>
-
         </div>
-
     )
-}   
+}
+
+function QuickAction({ href, label }: { href: string; label: string }) {
+    return (
+        <Link
+            href={href}
+            className="flex items-center justify-center gap-2 border border-gray-200 rounded-xl p-3 bg-white hover:shadow-md hover:-translate-y-[2px] transition text-sm font-semibold cursor-pointer"
+        >
+            {label}
+        </Link>
+    )
+}
+
+function StatusBadge({ status }: { status: string }) {
+    const colors: Record<string, string> = {
+        pending: "bg-yellow-100 text-yellow-700",
+        in_progress: "bg-blue-100 text-blue-700",
+        completed: "bg-green-100 text-green-700",
+    }
+    return (
+        <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium uppercase ${colors[status] || "bg-gray-100 text-gray-600"}`}>
+            {status.replace("_", " ")}
+        </span>
+    )
+}
+
+function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
+    return (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+            <AlertCircle size={48} className="text-red-400 mb-4" />
+            <p className="font-semibold text-gray-800">{message}</p>
+            <button
+                onClick={onRetry}
+                className="mt-4 flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition cursor-pointer"
+            >
+                <RefreshCw size={14} /> Retry
+            </button>
+        </div>
+    )
+}
+
+function CounsellorSkeleton() {
+    return (
+        <div className="space-y-8 animate-pulse">
+            <div className="h-8 w-48 bg-gray-200 rounded" />
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i} className="h-24 bg-gray-200 rounded-xl" />
+                ))}
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="h-12 bg-gray-200 rounded-xl" />
+                ))}
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+                <div className="h-48 bg-gray-200 rounded-xl" />
+                <div className="h-48 bg-gray-200 rounded-xl" />
+            </div>
+        </div>
+    )
+}

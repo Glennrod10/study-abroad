@@ -181,7 +181,7 @@ export default function ProfilePage() {
 
             {/* PROFILE PHOTO CARD */}
 
-            <div className="bg-white border border-border rounded-xl shadow-sm p-6 flex items-center justify-between">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 flex items-center justify-between">
 
                 <div className="flex items-center gap-6">
 
@@ -247,7 +247,7 @@ export default function ProfilePage() {
 
             {/* ACCOUNT FORM */}
 
-            <div className="bg-white border border-border rounded-xl shadow-sm p-8 space-y-6">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8 space-y-6">
 
                 <h2 className="font-semibold text-lg">
                     Account Information
@@ -327,7 +327,7 @@ function Input({ label, ...props }: any) {
 
             <input
                 {...props}
-                className="h-11 px-4 border border-border rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition"
+                className="h-11 px-4 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition"
             />
 
         </div>
@@ -349,7 +349,7 @@ function Textarea({ label, ...props }: any) {
             <textarea
                 {...props}
                 rows={4}
-                className="p-4 border border-border rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition"
+                className="p-4 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition"
             />
 
         </div>

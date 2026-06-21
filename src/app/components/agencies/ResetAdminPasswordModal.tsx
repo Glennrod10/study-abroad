@@ -66,7 +66,7 @@ export default function ResetAdminPasswordModal({
                     placeholder="Enter new password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full h-11 border border-border rounded-lg px-4"
+                    className="w-full h-11 border border-gray-200 rounded-lg px-4"
                 />
 
                 <button
