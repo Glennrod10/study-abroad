@@ -1,6 +1,7 @@
-import { Send, DraftingCompass, Clock, CheckCircle } from "lucide-react"
+import { Send, DraftingCompass, Clock, CheckCircle, LucideIcon } from "lucide-react"
+import type { StudentRecord } from "./page"
 
-export default function StudentsStats({ students }: { students: any[] }) {
+export default function StudentsStats({ students }: { students: StudentRecord[] }) {
 
     const applied = students.filter(s => s.status === "Applied").length
     const offers = students.filter(s => s.status === "Offer Letter").length
@@ -15,7 +16,7 @@ export default function StudentsStats({ students }: { students: any[] }) {
                 title="Applied"
                 value={applied}
                 subtitle="students applied"
-                icon={<Send size={18} />}
+                icon={Send}
                 color="blue"
             />
 
@@ -23,7 +24,7 @@ export default function StudentsStats({ students }: { students: any[] }) {
                 title="Offers"
                 value={offers}
                 subtitle="offer letters received"
-                icon={<DraftingCompass size={18} />}
+                icon={DraftingCompass}
                 color="indigo"
             />
 
@@ -31,7 +32,7 @@ export default function StudentsStats({ students }: { students: any[] }) {
                 title="Visa Pending"
                 value={pending}
                 subtitle="waiting for visa decision"
-                icon={<Clock size={18} />}
+                icon={Clock}
                 color="amber"
             />
 
@@ -39,7 +40,7 @@ export default function StudentsStats({ students }: { students: any[] }) {
                 title="Enrolled"
                 value={enrolled}
                 subtitle="successfully enrolled"
-                icon={<CheckCircle size={18} />}
+                icon={CheckCircle}
                 color="emerald"
             />
 
@@ -48,53 +49,42 @@ export default function StudentsStats({ students }: { students: any[] }) {
     )
 }
 
+type StatColor = "blue" | "indigo" | "amber" | "emerald"
+
+const statStyles: Record<StatColor, { card: string; icon: string }> = {
+    blue: { card: "bg-blue-50", icon: "bg-blue-100 text-blue-600" },
+    indigo: { card: "bg-indigo-50", icon: "bg-indigo-100 text-indigo-600" },
+    amber: { card: "bg-amber-50", icon: "bg-amber-100 text-amber-600" },
+    emerald: { card: "bg-emerald-50", icon: "bg-emerald-100 text-emerald-600" },
+}
+
 function StatCard({
     title,
     value,
     subtitle,
-    icon,
+    icon: Icon,
     color
-}: any) {
+}: {
+    title: string
+    value: number
+    subtitle: string
+    icon: LucideIcon
+    color: StatColor
+}) {
 
-    const styles: any = {
-
-        blue: {
-            card: "bg-blue-50",
-            icon: "bg-blue-100 text-blue-600"
-        },
-
-        indigo: {
-            card: "bg-indigo-50",
-            icon: "bg-indigo-100 text-indigo-600"
-        },
-
-        amber: {
-            card: "bg-amber-50",
-            icon: "bg-amber-100 text-amber-600"
-        },
-
-        emerald: {
-            card: "bg-emerald-50",
-            icon: "bg-emerald-100 text-emerald-600"
-        }
-
-    }
+    const s = statStyles[color]
 
     return (
 
         <div
-            className={`${styles[color].card} rounded-xl p-5 flex items-center gap-4 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-[2px]`}
+            className={`${s.card} rounded-xl p-5 flex items-center gap-4 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-[2px]`}
         >
 
-            {/* Icon */}
-
             <div
-                className={`w-11 h-11 rounded-lg flex items-center justify-center ${styles[color].icon}`}
+                className={`w-11 h-11 rounded-lg flex items-center justify-center ${s.icon}`}
             >
-                {icon}
+                <Icon size={18} />
             </div>
-
-            {/* Text */}
 
             <div>
 
@@ -108,7 +98,6 @@ function StatCard({
                 <h4 className="text-2xl font-black mt-0.5">
                     {value}
                 </h4>
-
 
             </div>
 

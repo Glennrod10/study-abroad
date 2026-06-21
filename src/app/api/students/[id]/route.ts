@@ -69,6 +69,23 @@ export async function PUT(
 
     const body = await req.json()
 
+    const allowedColumns = [
+        "first_name", "last_name", "email", "phone",
+        "destination_country", "country_interest",
+        "date_of_birth", "mailing_address",
+        "qualification", "english_proficiency", "intake",
+        "status", "assigned_staff", "counsellor_id",
+        "avatar_url", "student_code",
+        "last_activity_note", "last_activity_at",
+    ]
+
+    const updateData: Record<string, unknown> = {}
+    for (const key of allowedColumns) {
+        if (body[key] !== undefined) {
+            updateData[key] = body[key]
+        }
+    }
+
     const { data: student, error: fetchError } = await supabase
         .from("students")
         .select("first_name, last_name")
@@ -82,7 +99,7 @@ export async function PUT(
 
     const { error } = await supabase
         .from("students")
-        .update(body)
+        .update(updateData)
         .eq("id", id)
         .eq("agency_id", session.user.agency_id)
 
