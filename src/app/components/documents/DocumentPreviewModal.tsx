@@ -1,7 +1,8 @@
 "use client"
 
-import { X, FileText, ExternalLink, Trash2 } from "lucide-react"
-import TagBadge from "./TagBadge"
+import { useState, useEffect } from "react"
+import { X, FileText, ExternalLink, Trash2, Check, Loader2 } from "lucide-react"
+import TagManager from "./TagManager"
 
 type TagDetail = { id: string; name: string; color: string }
 
@@ -22,11 +23,26 @@ export default function DocumentPreviewModal({
     document,
     onClose,
     onDelete,
+    onUpdate,
 }: {
     document: Document | null
     onClose: () => void
     onDelete?: (id: string) => void
+    onUpdate?: () => void
 }) {
+    const [allTags, setAllTags] = useState<TagDetail[]>([])
+    const [selectedTags, setSelectedTags] = useState<string[]>([])
+    const [saving, setSaving] = useState(false)
+
+    useEffect(() => {
+        if (document) {
+            setSelectedTags(document.tags || [])
+            fetch("/api/document-tags")
+                .then(r => r.json())
+                .then(d => setAllTags(d.tags || []))
+        }
+    }, [document])
+
     if (!document) return null
 
     const fileUrl = document.file_url
@@ -82,6 +98,19 @@ export default function DocumentPreviewModal({
         )
     }
 
+    const hasTagChanges = JSON.stringify(selectedTags) !== JSON.stringify(document.tags || [])
+
+    const saveTags = async () => {
+        setSaving(true)
+        await fetch(`/api/documents/${document.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tags: selectedTags }),
+        })
+        setSaving(false)
+        onUpdate?.()
+    }
+
     const statusColors: Record<string, string> = {
         "Approved": "bg-green-50 text-green-600",
         "Rejected": "bg-red-50 text-red-600",
@@ -90,7 +119,7 @@ export default function DocumentPreviewModal({
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white w-full max-w-5xl max-h-[90vh] rounded-xl shadow-xl flex flex-col">
+            <div className="bg-white w-full max-w-7xl h-[85vh] max-h-[90vh] rounded-xl shadow-xl flex flex-col">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0">
                     <div className="flex items-center gap-3 min-w-0">
                         <h3 className="text-lg font-bold truncate">
@@ -134,7 +163,7 @@ export default function DocumentPreviewModal({
                         {renderPreview()}
                     </div>
 
-                    <div className="w-64 border-l border-gray-200 p-4 space-y-4 overflow-y-auto shrink-0">
+                    <div className="w-80 border-l border-gray-200 p-4 space-y-4 overflow-y-auto shrink-0">
                         <div>
                             <p className="text-xs font-semibold text-text-secondary uppercase mb-1">Student</p>
                             <p className="text-sm font-medium">{document.student_name}</p>
@@ -146,15 +175,23 @@ export default function DocumentPreviewModal({
                         </div>
 
                         <div>
-                            <p className="text-xs font-semibold text-text-secondary uppercase mb-1">Tags</p>
-                            <div className="flex flex-wrap gap-1">
-                                {document.tag_details.length > 0
-                                    ? document.tag_details.map(t => (
-                                        <TagBadge key={t.id} name={t.name} color={t.color} />
-                                    ))
-                                    : <span className="text-sm text-text-secondary">None</span>
-                                }
+                            <div className="flex items-center justify-between mb-1">
+                                <p className="text-xs font-semibold text-text-secondary uppercase">Tags</p>
+                                {hasTagChanges && (
+                                    <button
+                                        onClick={saveTags}
+                                        disabled={saving}
+                                        className="flex items-center gap-1 text-xs font-medium text-green-600 hover:text-green-700 cursor-pointer"
+                                    >
+                                        {saving ? <Loader2 size={12} className="animate-spin" /> : <Check size={12} />}
+                                        {saving ? "Saving..." : "Save"}
+                                    </button>
+                                )}
                             </div>
+                            <TagManager
+                                selectedTags={selectedTags}
+                                onTagsChange={setSelectedTags}
+                            />
                         </div>
 
                         <div>

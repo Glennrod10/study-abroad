@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search } from "lucide-react"
+import { Search, ChevronDown } from "lucide-react"
+import AppDatePicker from "@/app/components/ui/AppDatePicker"
 
 type Tag = { id: string; name: string; color: string }
 
@@ -22,6 +23,7 @@ export default function DocumentFilters({
 }) {
     const [tags, setTags] = useState<Tag[]>([])
     const [tagOpen, setTagOpen] = useState(false)
+    const [statusOpen, setStatusOpen] = useState(false)
 
     useEffect(() => {
         fetch("/api/document-tags")
@@ -108,32 +110,41 @@ export default function DocumentFilters({
                 )}
             </div>
 
-            <select
-                value={filters.status}
-                onChange={e => update("status", e.target.value)}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 cursor-pointer"
-            >
-                {statuses.map(s => (
-                    <option key={s} value={s}>
-                        {s || "All Statuses"}
-                    </option>
-                ))}
-            </select>
+            <div className="relative">
+                <button
+                    type="button"
+                    onClick={() => setStatusOpen(!statusOpen)}
+                    className="flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white hover:border-gray-300 transition cursor-pointer min-w-[140px]"
+                >
+                    <span>{filters.status || "All Statuses"}</span>
+                    <ChevronDown size={16} className="text-text-secondary ml-auto" />
+                </button>
+                {statusOpen && (
+                    <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                        {statuses.map(s => (
+                            <button
+                                key={s}
+                                type="button"
+                                onClick={() => { update("status", s); setStatusOpen(false) }}
+                                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition cursor-pointer"
+                            >
+                                {s || "All Statuses"}
+                            </button>
+                        ))}
+                    </div>
+                )}
+            </div>
 
-            <input
-                type="date"
+            <AppDatePicker
                 value={filters.dateFrom}
-                onChange={e => update("dateFrom", e.target.value)}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20"
-                title="From date"
+                onChange={v => update("dateFrom", v)}
+                placeholder="From date"
             />
 
-            <input
-                type="date"
+            <AppDatePicker
                 value={filters.dateTo}
-                onChange={e => update("dateTo", e.target.value)}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20"
-                title="To date"
+                onChange={v => update("dateTo", v)}
+                placeholder="To date"
             />
         </div>
     )

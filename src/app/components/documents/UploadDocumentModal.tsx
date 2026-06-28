@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { X, UploadCloud, ChevronDown } from "lucide-react"
 import { useRouter } from "next/navigation"
-import TagBadge from "./TagBadge"
+import TagManager from "./TagManager"
 
 type Tag = { id: string; name: string; color: string }
 
@@ -70,12 +70,6 @@ export default function UploadDocumentModal({
             router.refresh()
             onClose()
         }
-    }
-
-    const toggleTag = (id: string) => {
-        setSelectedTags(prev =>
-            prev.includes(id) ? prev.filter(t => t !== id) : [...prev, id]
-        )
     }
 
     return (
@@ -150,6 +144,14 @@ export default function UploadDocumentModal({
                         <span className="text-xs text-text-secondary mt-1">PDF, DOCX, JPG, PNG supported</span>
                         <input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" className="hidden" onChange={e => setFile(e.target.files?.[0] || null)} />
                     </label>
+
+                    <div>
+                        <p className="text-sm font-medium mb-1">Tags</p>
+                        <TagManager
+                            selectedTags={selectedTags}
+                            onTagsChange={setSelectedTags}
+                        />
+                    </div>
                 </div>
 
                 <div className="flex justify-end gap-3 px-6 py-4 border-t border-gray-200">

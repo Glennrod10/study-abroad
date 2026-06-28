@@ -53,7 +53,7 @@ export default function StudentDocumentsModal({
         <>
             <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 
-                <div className="bg-white w-full max-w-2xl rounded-xl shadow-xl">
+                <div className="bg-white w-full max-w-3xl rounded-xl shadow-xl">
 
                     {/* Header */}
                     <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
@@ -83,17 +83,17 @@ export default function StudentDocumentsModal({
                         {documents?.map((doc: any) => (
                             <div
                                 key={doc.id}
-                                className="flex items-center justify-between border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50 transition"
+                                className="flex items-start justify-between border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50 transition"
                             >
                                 {/* Left Side */}
-                                <div className="flex items-center gap-4">
+                                <div className="flex items-start gap-3 min-w-0">
 
-                                    <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
                                         <FileText size={18} className="text-gray-500" />
                                     </div>
 
-                                    <div>
-                                        <p className="font-medium text-sm">
+                                    <div className="min-w-0">
+                                        <p className="font-medium text-sm truncate" title={doc.document_name}>
                                             {doc.document_name}
                                         </p>
                                         <p className="text-xs text-text-secondary">
@@ -114,7 +114,7 @@ export default function StudentDocumentsModal({
                                 </div>
 
                                 {/* Right Side */}
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-1 shrink-0">
 
                                     {/* Status */}
                                     <span

@@ -100,16 +100,20 @@ export default function DocumentTable({
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <div className="flex flex-wrap gap-1">
-                                        {doc.tag_details.slice(0, 3).map(t => (
-                                            <TagBadge key={t.id} name={t.name} color={t.color} />
-                                        ))}
-                                        {doc.tag_details.length > 3 && (
-                                            <span className="text-xs text-text-secondary">
-                                                +{doc.tag_details.length - 3}
-                                            </span>
-                                        )}
-                                    </div>
+                                    {doc.tag_details.length > 0 ? (
+                                        <div className="flex flex-wrap gap-1">
+                                            {doc.tag_details.slice(0, 3).map(t => (
+                                                <TagBadge key={t.id} name={t.name} color={t.color} />
+                                            ))}
+                                            {doc.tag_details.length > 3 && (
+                                                <span className="text-xs text-text-secondary">
+                                                    +{doc.tag_details.length - 3}
+                                                </span>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <span className="text-sm text-text-disabled">-</span>
+                                    )}
                                 </td>
                                 <td className="px-6 py-4">
                                     <span

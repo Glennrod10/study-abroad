@@ -30,7 +30,7 @@ export default async function StudentsPage({
         .from("students")
         .select(`
             *,
-            counsellor:users!fk_students_counsellor(name)
+            counsellor:users(name)
         `)
         .eq("agency_id", session.user.agency_id)
 

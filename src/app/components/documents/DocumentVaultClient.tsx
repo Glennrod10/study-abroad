@@ -105,6 +105,7 @@ export default function DocumentVaultClient() {
                 document={previewDoc}
                 onClose={() => setPreviewDoc(null)}
                 onDelete={handleDelete}
+                onUpdate={fetchDocuments}
             />
 
             <UploadDocumentModal

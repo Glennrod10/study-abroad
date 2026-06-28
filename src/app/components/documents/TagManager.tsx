@@ -95,7 +95,7 @@ export default function TagManager({
             </div>
 
             {open && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-lg z-50 p-3 space-y-3">
+                <div className="absolute top-full left-0 mt-2 w-72 bg-white border border-gray-200 rounded-xl shadow-lg z-50 p-3 space-y-3">
                     <p className="text-xs font-semibold text-text-secondary uppercase">Tags</p>
 
                     <div className="space-y-1 max-h-40 overflow-y-auto">

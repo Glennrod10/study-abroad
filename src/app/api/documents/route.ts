@@ -42,9 +42,20 @@ export async function GET(req: NextRequest) {
 
     if (search) {
         const sanitized = search.replace(/[%_]/g, "")
-        query = query.or(
-            `document_name.ilike.%${sanitized}%,students.first_name.ilike.%${sanitized}%,students.last_name.ilike.%${sanitized}%`
-        )
+
+        const { data: matchingStudents } = await supabase
+            .from("students")
+            .select("id")
+            .or(`first_name.ilike.%${sanitized}%,last_name.ilike.%${sanitized}%`)
+            .eq("agency_id", agencyId)
+
+        const studentIds = (matchingStudents || []).map(s => s.id)
+
+        const conditions = [`document_name.ilike.%${sanitized}%`]
+        if (studentIds.length > 0) {
+            conditions.push(`student_id.in.(${studentIds.join(",")})`)
+        }
+        query = query.or(conditions.join(","))
     }
 
     if (tagIds.length > 0) {
