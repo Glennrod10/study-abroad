@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { UploadCloud, ChevronDown } from "lucide-react"
 import { useRouter } from "next/navigation"
+import TagManager from "../documents/TagManager"
 
 const documentTypes = [
     "Passport",
@@ -19,6 +20,7 @@ export default function UploadDocument({ studentId }: { studentId: string }) {
     const [type, setType] = useState("Passport")
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [selectedTags, setSelectedTags] = useState<string[]>([])
 
     const handleUpload = async () => {
         if (!file) return
@@ -29,6 +31,7 @@ export default function UploadDocument({ studentId }: { studentId: string }) {
         formData.append("file", file)
         formData.append("student_id", studentId)
         formData.append("document_type", type)
+        selectedTags.forEach(t => formData.append("tags", t))
 
         const res = await fetch("/api/student-documents", {
             method: "POST",
@@ -78,6 +81,14 @@ export default function UploadDocument({ studentId }: { studentId: string }) {
                 )}
             </div>
 
+            <div>
+                <p className="text-sm font-medium mb-1">Tags</p>
+                <TagManager
+                    selectedTags={selectedTags}
+                    onTagsChange={setSelectedTags}
+                />
+            </div>
+
             {/* File Upload Box */}
             <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-xl p-6 cursor-pointer hover:border-[var(--color-primary)] transition">
                 <UploadCloud size={32} className="text-text-secondary mb-2" />
@@ -92,6 +103,7 @@ export default function UploadDocument({ studentId }: { studentId: string }) {
 
                 <input
                     type="file"
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp"
                     className="hidden"
                     onChange={(e) => setFile(e.target.files?.[0] || null)}
                 />

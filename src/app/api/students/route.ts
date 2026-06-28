@@ -8,6 +8,32 @@ const supabase = createClient(
     process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+export async function GET(req: Request) {
+    const session = await getAuthSession()
+    if (!session) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const { searchParams } = new URL(req.url)
+    const search = searchParams.get("search") || ""
+
+    let query = supabase
+        .from("students")
+        .select("id, first_name, last_name, email")
+        .eq("agency_id", session.user.agency_id)
+        .limit(10)
+
+    if (search) {
+        query = query.or(
+            `first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%`
+        )
+    }
+
+    const { data: students } = await query.order("first_name")
+
+    return NextResponse.json({ students: students || [] })
+}
+
 export async function POST(req: Request) {
 
     const session = await getAuthSession()
