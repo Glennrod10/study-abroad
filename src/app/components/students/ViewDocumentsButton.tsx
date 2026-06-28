@@ -3,7 +3,7 @@
 import { useState } from "react"
 import StudentDocumentsModal from "./StudentDocumentsModal"
 
-export default function ViewDocumentsButton({ documents }: any) {
+export default function ViewDocumentsButton({ documents, allTags }: any) {
 
     const [open, setOpen] = useState(false)
 
@@ -20,6 +20,7 @@ export default function ViewDocumentsButton({ documents }: any) {
                 open={open}
                 onClose={() => setOpen(false)}
                 documents={documents}
+                allTags={allTags}
             />
         </>
     )

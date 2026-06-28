@@ -38,6 +38,11 @@ export default async function StudentDetails({
         .select("*")
         .eq("student_id", id)
 
+    const { data: allDocTags } = await supabase
+        .from("document_tags")
+        .select("*")
+        .eq("agency_id", session.user.agency_id)
+
     const { data: timeline } = await supabase
         .from("student_timeline")
         .select("*")
@@ -157,7 +162,7 @@ export default async function StudentDetails({
                                     {documents?.length || 0} document(s) uploaded
                                 </p>
 
-                                <ViewDocumentsButton documents={documents} />
+                                <ViewDocumentsButton documents={documents} allTags={allDocTags} />
 
                             </div>
 
