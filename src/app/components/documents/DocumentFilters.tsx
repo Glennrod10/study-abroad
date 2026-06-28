@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { Search } from "lucide-react"
 
 type Tag = { id: string; name: string; color: string }
@@ -22,7 +22,6 @@ export default function DocumentFilters({
 }) {
     const [tags, setTags] = useState<Tag[]>([])
     const [tagOpen, setTagOpen] = useState(false)
-    const searchTimer = useRef<ReturnType<typeof setTimeout>>()
 
     useEffect(() => {
         fetch("/api/document-tags")
