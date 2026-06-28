@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { X, UploadCloud } from "lucide-react"
+import { X, UploadCloud, ChevronDown } from "lucide-react"
 import { useRouter } from "next/navigation"
 import TagBadge from "./TagBadge"
 
@@ -23,6 +23,10 @@ export default function UploadDocumentModal({
     const [selectedTags, setSelectedTags] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
     const [tagOpen, setTagOpen] = useState(false)
+    const [docType, setDocType] = useState("Passport")
+    const [docTypeOpen, setDocTypeOpen] = useState(false)
+
+    const documentTypes = ["Passport", "SOP", "Transcript", "Offer Letter", "Visa Document", "Other"]
 
     useEffect(() => {
         fetch("/api/document-tags")
@@ -49,7 +53,7 @@ export default function UploadDocumentModal({
         const formData = new FormData()
         formData.append("file", file)
         formData.append("student_id", studentId)
-        formData.append("document_type", "Other")
+        formData.append("document_type", docType)
         selectedTags.forEach(t => formData.append("tags", t))
 
         const res = await fetch("/api/student-documents", {
@@ -109,43 +113,33 @@ export default function UploadDocumentModal({
                         )}
                     </div>
 
+                    {/* Document Type Dropdown */}
                     <div>
-                        <p className="text-sm font-medium mb-1">Tags</p>
-                        <div className="relative">
+                        <p className="text-sm font-medium mb-1">Document Type</p>
+                        <div className="relative w-48">
                             <button
-                                onClick={() => setTagOpen(!tagOpen)}
-                                className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white w-full text-left cursor-pointer"
+                                type="button"
+                                onClick={() => setDocTypeOpen(!docTypeOpen)}
+                                className="w-full flex items-center justify-between px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium hover:border-[var(--color-primary)] transition cursor-pointer"
                             >
-                                {selectedTags.length > 0
-                                    ? `${selectedTags.length} tag(s) selected`
-                                    : "Select tags..."
-                                }
+                                {docType}
+                                <ChevronDown size={16} className="text-text-secondary" />
                             </button>
-                            {tagOpen && (
-                                <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10 p-2 max-h-40 overflow-y-auto">
-                                    {tags.map(tag => (
-                                        <label key={tag.id} className="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded cursor-pointer text-sm">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedTags.includes(tag.id)}
-                                                onChange={() => toggleTag(tag.id)}
-                                                className="rounded border-gray-300"
-                                            />
-                                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: tag.color }} />
-                                            {tag.name}
-                                        </label>
+                            {docTypeOpen && (
+                                <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+                                    {documentTypes.map((dt) => (
+                                        <button
+                                            key={dt}
+                                            type="button"
+                                            onClick={() => { setDocType(dt); setDocTypeOpen(false) }}
+                                            className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition cursor-pointer"
+                                        >
+                                            {dt}
+                                        </button>
                                     ))}
                                 </div>
                             )}
                         </div>
-                        {selectedTags.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-2">
-                                {selectedTags.map(id => {
-                                    const tag = tags.find(t => t.id === id)
-                                    return tag ? <TagBadge key={id} name={tag.name} color={tag.color} /> : null
-                                })}
-                            </div>
-                        )}
                     </div>
 
                     <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-xl p-6 cursor-pointer hover:border-[var(--color-primary)] transition">
@@ -154,7 +148,7 @@ export default function UploadDocumentModal({
                             {file ? file.name : "Click to upload document"}
                         </span>
                         <span className="text-xs text-text-secondary mt-1">PDF, DOCX, JPG, PNG supported</span>
-                        <input type="file" className="hidden" onChange={e => setFile(e.target.files?.[0] || null)} />
+                        <input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" className="hidden" onChange={e => setFile(e.target.files?.[0] || null)} />
                     </label>
                 </div>
 

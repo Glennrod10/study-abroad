@@ -108,6 +108,7 @@ export default function DocumentPreviewModal({
                         <a
                             href={fileUrl}
                             target="_blank"
+                            rel="noopener noreferrer"
                             className="p-2 hover:bg-gray-100 rounded cursor-pointer"
                             title="Open in new tab"
                         >

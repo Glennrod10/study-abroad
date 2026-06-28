@@ -11,6 +11,7 @@ export default function StudentDocumentsModal({
     onClose,
     documents,
     allTags = [],
+    studentName = "Student",
 }: any) {
 
     const [previewDoc, setPreviewDoc] = useState<any>(null)
@@ -165,7 +166,7 @@ export default function StudentDocumentsModal({
             <DocumentPreviewModal
                 document={previewDoc ? {
                     ...previewDoc,
-                    student_name: "Student",
+                    student_name: studentName,
                     tag_details: (previewDoc.tags || []).map((tagId: string) => {
                         const tag = resolveTag(tagId)
                         return tag ? { id: tag.id, name: tag.name, color: tag.color } : null

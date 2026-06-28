@@ -41,8 +41,9 @@ export async function GET(req: NextRequest) {
         .eq("agency_id", agencyId)
 
     if (search) {
+        const sanitized = search.replace(/[%_]/g, "")
         query = query.or(
-            `document_name.ilike.%${search}%,students.first_name.ilike.%${search}%,students.last_name.ilike.%${search}%`
+            `document_name.ilike.%${sanitized}%,students.first_name.ilike.%${sanitized}%,students.last_name.ilike.%${sanitized}%`
         )
     }
 

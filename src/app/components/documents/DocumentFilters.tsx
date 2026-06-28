@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Search } from "lucide-react"
 
 type Tag = { id: string; name: string; color: string }
@@ -22,6 +22,7 @@ export default function DocumentFilters({
 }) {
     const [tags, setTags] = useState<Tag[]>([])
     const [tagOpen, setTagOpen] = useState(false)
+    const searchTimer = useRef<ReturnType<typeof setTimeout>>()
 
     useEffect(() => {
         fetch("/api/document-tags")
@@ -29,8 +30,27 @@ export default function DocumentFilters({
             .then(d => setTags(d.tags || []))
     }, [])
 
+    const [searchInput, setSearchInput] = useState(filters.search)
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (searchInput !== filters.search) {
+                onFilterChange({ ...filters, search: searchInput })
+            }
+        }, 300)
+        return () => clearTimeout(timer)
+    }, [searchInput])
+
+    useEffect(() => {
+        setSearchInput(filters.search)
+    }, [filters.search])
+
     const update = (key: keyof FilterState, value: any) => {
-        onFilterChange({ ...filters, [key]: value })
+        if (key === "search") {
+            setSearchInput(value)
+        } else {
+            onFilterChange({ ...filters, [key]: value })
+        }
     }
 
     const toggleTag = (id: string) => {
@@ -49,7 +69,7 @@ export default function DocumentFilters({
                 <input
                     type="text"
                     placeholder="Search student or document..."
-                    value={filters.search}
+                    value={searchInput}
                     onChange={e => update("search", e.target.value)}
                     className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 focus:border-[var(--color-primary)]"
                 />

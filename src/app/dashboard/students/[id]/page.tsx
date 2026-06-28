@@ -162,7 +162,7 @@ export default async function StudentDetails({
                                     {documents?.length || 0} document(s) uploaded
                                 </p>
 
-                                <ViewDocumentsButton documents={documents} allTags={allDocTags} />
+                                <ViewDocumentsButton documents={documents} allTags={allDocTags} studentName={`${student.first_name} ${student.last_name || ""}`.trim()} />
 
                             </div>
 

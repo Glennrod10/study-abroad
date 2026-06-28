@@ -147,6 +147,7 @@ export default function UploadDocument({ studentId }: { studentId: string }) {
 
                 <input
                     type="file"
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp"
                     className="hidden"
                     onChange={(e) => setFile(e.target.files?.[0] || null)}
                 />
