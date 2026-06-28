@@ -230,6 +230,20 @@ create table if not exists student_documents (
     created_at    timestamptz not null default now()
 );
 
+-- ── Document Tags ───────────────────────────────────────────────────────────
+create table if not exists document_tags (
+    id         uuid primary key default gen_random_uuid(),
+    name       text not null,
+    color      text not null default '#6366F1',
+    agency_id  uuid references agencies(id) on delete cascade,
+    created_at timestamptz not null default now(),
+    unique(name, agency_id)
+);
+
+-- Add tags column to existing student_documents table
+alter table student_documents
+add column if not exists tags jsonb default '[]'::jsonb;
+
 -- ── Agency Integrations ─────────────────────────────────────────────────────
 create table if not exists agency_integrations (
     id           uuid primary key default gen_random_uuid(),
@@ -249,3 +263,5 @@ create index if not exists idx_leads_agency on leads(agency_id);
 create index if not exists idx_visa_cases_agency on visa_cases(agency_id);
 create index if not exists idx_activities_agency on activities(agency_id);
 create index if not exists idx_tasks_agency on tasks(agency_id);
+create index if not exists idx_student_docs_tags
+    on student_documents using gin(tags);
