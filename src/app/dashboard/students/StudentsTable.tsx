@@ -2,36 +2,29 @@
 
 import { useState } from "react"
 import StudentRow from "./StudentRow"
-import { Trash2, ChevronLeft, ChevronRight } from "lucide-react"
+import { Trash2, ChevronLeft, ChevronRight, Users } from "lucide-react"
 import { createClient } from "@supabase/supabase-js"
 import { toast } from "sonner"
+import type { StudentRecord } from "./page"
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-export default function StudentsTable({ students }: { students: any[] }) {
+export default function StudentsTable({ students }: { students: StudentRecord[] }) {
 
     const [selected, setSelected] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
-
-    /* ---------------- PAGINATION ---------------- */
-
     const [page, setPage] = useState(1)
     const perPage = 10
 
     const totalPages = Math.ceil(students.length / perPage)
-
     const start = (page - 1) * perPage
     const end = start + perPage
-
     const paginatedStudents = students.slice(start, end)
 
-    /* ---------------- PAGINATION WINDOW ---------------- */
-
     const maxVisiblePages = 5
-
     let startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2))
     let endPage = startPage + maxVisiblePages - 1
 
@@ -50,9 +43,15 @@ export default function StudentsTable({ students }: { students: any[] }) {
 
     if (!students || students.length === 0) {
         return (
-            <div className="bg-white border border-gray-200 rounded-xl p-12 text-center shadow-sm">
-                <p className="text-text-secondary text-sm">
-                    No students match your filters.
+            <div className="flex flex-col items-center justify-center bg-white border border-gray-200 rounded-xl p-16 shadow-sm gap-4">
+                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                    <Users size={28} className="text-gray-400" />
+                </div>
+                <p className="text-lg font-semibold text-gray-900">No students found</p>
+                <p className="text-sm text-text-secondary max-w-sm text-center">
+                    {selected.length > 0
+                        ? "Try adjusting your search or filter criteria above."
+                        : "Get started by adding your first student profile."}
                 </p>
             </div>
         )
@@ -61,37 +60,25 @@ export default function StudentsTable({ students }: { students: any[] }) {
     /* ---------------- SELECT ---------------- */
 
     const toggleSelect = (id: string) => {
-
-        if (selected.includes(id)) {
-            setSelected(selected.filter((i) => i !== id))
-        } else {
-            setSelected([...selected, id])
-        }
-
+        setSelected((prev) =>
+            prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+        )
     }
 
     const toggleSelectAll = () => {
-
         const pageIds = paginatedStudents.map((s) => s.id)
 
-        if (pageIds.every((id) => selected.includes(id))) {
-
-            setSelected(selected.filter((id) => !pageIds.includes(id)))
-
-        } else {
-
-            setSelected([...new Set([...selected, ...pageIds])])
-
-        }
-
+        setSelected((prev) =>
+            pageIds.every((id) => prev.includes(id))
+                ? prev.filter((id) => !pageIds.includes(id))
+                : [...new Set([...prev, ...pageIds])]
+        )
     }
 
     /* ---------------- BULK DELETE ---------------- */
 
     const bulkDelete = async () => {
-
         if (selected.length === 0) return
-
         if (!confirm(`Delete ${selected.length} students?`)) return
 
         setLoading(true)
@@ -102,26 +89,18 @@ export default function StudentsTable({ students }: { students: any[] }) {
             .in("id", selected)
 
         if (error) {
-
             toast.error("Failed to delete students")
-
         } else {
-
             toast.success(`${selected.length} students deleted`)
-
             window.location.reload()
-
         }
 
         setLoading(false)
-
     }
 
     return (
 
         <div className="space-y-4">
-
-            {/* BULK BAR */}
 
             {selected.length > 0 && (
 
@@ -135,7 +114,7 @@ export default function StudentsTable({ students }: { students: any[] }) {
 
                         <button
                             onClick={() => setSelected([])}
-                            className="text-sm text-gray-600 cursor-pointer"
+                            className="text-sm text-gray-600 hover:text-gray-800 transition cursor-pointer"
                         >
                             Cancel
                         </button>
@@ -143,7 +122,7 @@ export default function StudentsTable({ students }: { students: any[] }) {
                         <button
                             disabled={loading}
                             onClick={bulkDelete}
-                            className="flex items-center gap-2 text-sm font-semibold text-red-600 cursor-pointer"
+                            className="flex items-center gap-2 text-sm font-semibold text-red-600 hover:text-red-700 transition cursor-pointer disabled:opacity-50"
                         >
                             <Trash2 size={16} />
                             Delete Selected
@@ -154,8 +133,6 @@ export default function StudentsTable({ students }: { students: any[] }) {
                 </div>
 
             )}
-
-            {/* TABLE */}
 
             <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
 
@@ -222,92 +199,84 @@ export default function StudentsTable({ students }: { students: any[] }) {
 
             </div>
 
-            {/* PAGINATION */}
+            {totalPages > 1 && (
 
-            <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between">
 
-                <p className="text-sm text-text-secondary">
-                    Showing {start + 1} – {Math.min(end, students.length)} of {students.length}
-                </p>
+                    <p className="text-sm text-text-secondary">
+                        Showing {start + 1} – {Math.min(end, students.length)} of {students.length}
+                    </p>
 
-                <div className="flex items-center gap-2">
-
-                    {/* PREVIOUS */}
-
-                    <button
-                        disabled={page === 1}
-                        onClick={() => setPage(page - 1)}
-                        className="h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40"
-                    >
-                        <ChevronLeft size={16} />
-                    </button>
-
-                    {/* FIRST PAGE */}
-
-                    {startPage > 1 && (
-                        <>
-                            <button
-                                onClick={() => setPage(1)}
-                                className="h-9 w-9 rounded-lg border border-gray-200 hover:bg-gray-50"
-                            >
-                                1
-                            </button>
-
-                            {startPage > 2 && (
-                                <span className="px-2 text-sm text-gray-400">...</span>
-                            )}
-                        </>
-                    )}
-
-                    {/* PAGE WINDOW */}
-
-                    {visiblePages.map((p) => (
+                    <div className="flex items-center gap-2">
 
                         <button
-                            key={p}
-                            onClick={() => setPage(p)}
-                            className={`
-                            h-9 w-9 rounded-lg text-sm font-medium
-                            ${page === p
-                                    ? "bg-[var(--color-primary)] text-white"
-                                    : "border border-gray-200 hover:bg-gray-50"}
-                            `}
+                            disabled={page === 1}
+                            onClick={() => setPage(page - 1)}
+                            className="h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
                         >
-                            {p}
+                            <ChevronLeft size={16} />
                         </button>
 
-                    ))}
+                        {startPage > 1 && (
+                            <>
+                                <button
+                                    onClick={() => setPage(1)}
+                                    className="h-9 w-9 rounded-lg border border-gray-200 hover:bg-gray-50 transition cursor-pointer text-sm"
+                                >
+                                    1
+                                </button>
 
-                    {/* LAST PAGE */}
+                                {startPage > 2 && (
+                                    <span className="px-2 text-sm text-gray-400">...</span>
+                                )}
+                            </>
+                        )}
 
-                    {endPage < totalPages && (
-                        <>
-                            {endPage < totalPages - 1 && (
-                                <span className="px-2 text-sm text-gray-400">...</span>
-                            )}
+                        {visiblePages.map((p) => (
 
                             <button
-                                onClick={() => setPage(totalPages)}
-                                className="h-9 w-9 rounded-lg border border-gray-200 hover:bg-gray-50"
+                                key={p}
+                                onClick={() => setPage(p)}
+                                className={`
+                                h-9 w-9 rounded-lg text-sm font-medium transition cursor-pointer
+                                ${page === p
+                                        ? "bg-[var(--color-primary)] text-white"
+                                        : "border border-gray-200 hover:bg-gray-50"}
+                                `}
                             >
-                                {totalPages}
+                                {p}
                             </button>
-                        </>
-                    )}
 
-                    {/* NEXT */}
+                        ))}
 
-                    <button
-                        disabled={page === totalPages}
-                        onClick={() => setPage(page + 1)}
-                        className="h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40"
-                    >
-                        <ChevronRight size={16} />
-                    </button>
+                        {endPage < totalPages && (
+                            <>
+                                {endPage < totalPages - 1 && (
+                                    <span className="px-2 text-sm text-gray-400">...</span>
+                                )}
+
+                                <button
+                                    onClick={() => setPage(totalPages)}
+                                    className="h-9 w-9 rounded-lg border border-gray-200 hover:bg-gray-50 transition cursor-pointer text-sm"
+                                >
+                                    {totalPages}
+                                </button>
+                            </>
+                        )}
+
+                        <button
+                            disabled={page === totalPages}
+                            onClick={() => setPage(page + 1)}
+                            className="h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+                        >
+                            <ChevronRight size={16} />
+                        </button>
+
+                    </div>
 
                 </div>
 
-            </div>
+            )}
 
         </div>
 

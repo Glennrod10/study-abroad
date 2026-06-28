@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { UploadCloud } from "lucide-react"
 import { toast } from "sonner"
-import { supabase } from "@/app/lib/supabase"
 
 type Props = {
     initialData?: any
@@ -34,7 +33,6 @@ export default function StudentForm({ initialData = {}, mode }: Props) {
         english_proficiency: "",
         destination_country: "",
         intake: "",
-        application_stage: "Profile Created",
         status: "Applied",
         counsellor_id: "",
         ...initialData,
@@ -47,12 +45,15 @@ export default function StudentForm({ initialData = {}, mode }: Props) {
 
         const fetchCounsellors = async () => {
 
-            const { data } = await supabase
-                .from("users")
-                .select("id,name")
-                .eq("role", "counsellor")
-
-            setCounsellors(data || [])
+            try {
+                const res = await fetch("/api/counsellors")
+                if (res.ok) {
+                    const data = await res.json()
+                    setCounsellors(data.map((c: { id: string; name: string }) => ({ id: c.id, name: c.name })))
+                }
+            } catch {
+                // silently fail — counsellor select will show "Unassigned"
+            }
         }
 
         fetchCounsellors()
@@ -149,7 +150,8 @@ export default function StudentForm({ initialData = {}, mode }: Props) {
 
         } else {
 
-            toast.error("Something went wrong")
+            const errData = await res.json().catch(() => null)
+            toast.error(errData?.error || "Something went wrong")
 
         }
 
@@ -270,20 +272,6 @@ export default function StudentForm({ initialData = {}, mode }: Props) {
                         </select>
 
                     </div>
-
-                    <Select
-                        name="application_stage"
-                        label="Application Stage"
-                        value={form.application_stage}
-                        onChange={handleChange}
-                        options={[
-                            "Profile Created",
-                            "Applied",
-                            "Offer Letter",
-                            "Visa Pending",
-                            "Enrolled",
-                        ]}
-                    />
 
                     <Select
                         name="status"

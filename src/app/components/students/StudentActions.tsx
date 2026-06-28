@@ -5,7 +5,12 @@ import { useState, useRef, useEffect } from "react"
 import { Eye, Edit, Trash2, MoreVertical, User } from "lucide-react"
 import { toast } from "sonner"
 import ConfirmModal from "../ui/ConfirmModal"
-import { supabase } from "@/app/lib/supabase"
+import { createClient } from "@supabase/supabase-js"
+
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 export default function StudentActions({ studentId }: { studentId: string }) {
 
@@ -18,7 +23,7 @@ export default function StudentActions({ studentId }: { studentId: string }) {
 
     const [showAssignModal, setShowAssignModal] = useState(false)
 
-    const [counsellors, setCounsellors] = useState<any[]>([])
+    const [counsellors, setCounsellors] = useState<{ id: string; name: string }[]>([])
 
     const [selectedCounsellor, setSelectedCounsellor] = useState("")
 
@@ -47,13 +52,15 @@ export default function StudentActions({ studentId }: { studentId: string }) {
 
         const fetchCounsellors = async () => {
 
-            const { data } = await supabase
-                .from("users")
-                .select("id,name")
-                .eq("role", "counsellor")
-
-            setCounsellors(data || [])
-
+            try {
+                const res = await fetch("/api/counsellors")
+                if (res.ok) {
+                    const data = await res.json()
+                    setCounsellors(data.map((c: { id: string; name: string }) => ({ id: c.id, name: c.name })))
+                }
+            } catch {
+                // silently fail
+            }
         }
 
         fetchCounsellors()

@@ -184,7 +184,7 @@ export default async function StudentDetails({
     )
 }
 
-function Detail({ label, value }: any) {
+function Detail({ label, value }: { label: string; value?: string | null }) {
     return (
         <div>
             <p className="text-xs text-text-secondary">
