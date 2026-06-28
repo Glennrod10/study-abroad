@@ -14,6 +14,7 @@ import {
     UserSquare2,
     ListTodo,
     PieChart,
+    FolderOpen,
     PanelLeftClose,
     PanelLeftOpen,
     LucideIcon
@@ -50,6 +51,12 @@ const navItems: NavItem[] = [
         href: "/dashboard/applications",
         roles: ["admin", "counsellor"],
         icon: FileText,
+    },
+    {
+        name: "Documents",
+        href: "/dashboard/documents",
+        roles: ["admin", "counsellor"],
+        icon: FolderOpen,
     },
     {
         name: "Universities",
