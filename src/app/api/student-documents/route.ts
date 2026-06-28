@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     const file = formData.get("file") as File
     const student_id = formData.get("student_id") as string
     const document_type = formData.get("document_type") as string
+    const tagsRaw = formData.getAll("tags") as string[]
 
     if (!file || !student_id) {
         return NextResponse.json({ error: "Missing fields" }, { status: 400 })
@@ -45,6 +46,7 @@ export async function POST(req: Request) {
             document_name: file.name,
             file_url: data.publicUrl,
             document_type,
+            tags: tagsRaw.length > 0 ? tagsRaw : [],
             status: "Pending Review",
         },
     ])
